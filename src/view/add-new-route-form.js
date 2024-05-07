@@ -49,20 +49,6 @@ function getDestinationOptionsTemplate(destination) {
 `);
 }
 
-// function getDestinationsListElement({name}) {
-//   return (`<option value="${name}"></option>`);
-// }
-
-// function getDestinationsList({destination}) {
-//   return (`
-//   <div class="event__photos-container">
-//     <div class="event__photos-tape">
-//       ${destination.map((item) => getDestinationsListElement(item)).join('')}
-//     </div>
-//   </div>
-//   `);
-// }
-
 function createNewFormAddRouteTemplate(point, offers, destination) {
 
   const {dateFrom, type, basePrice, dateTo} = point;
@@ -138,11 +124,9 @@ function createNewFormAddRouteTemplate(point, offers, destination) {
                     </label>
                     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1">
                     <datalist id="destination-list-1">
-                    <div class="event__photos-container">
-                    <div class="event__photos-tape">
-                      <option value="${name}"></option>
-                    </div>
-                  </div>
+                      <option value="Amsterdam"></option>
+                      <option value="Geneva"></option>
+                      <option value="Chamonix"></option>
                     </datalist>
                   </div>
 
@@ -166,7 +150,6 @@ function createNewFormAddRouteTemplate(point, offers, destination) {
                   <button class="event__reset-btn" type="reset">Cancel</button>
                 </header>
                 <section class="event__details">
-
                   ${getTemplateOffers(offers)}
                   ${getDestinationOptionsTemplate(destination)}
                 </section>

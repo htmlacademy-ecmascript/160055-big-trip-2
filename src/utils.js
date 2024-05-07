@@ -28,7 +28,7 @@ function humanizePointHour(hour) {
 function getDifferenceDate(dateFrom, dateTo) {
   // const hoursDifference = new Date(dateTo.getTime() - dateFrom.getTime());
   // return dayjs(hoursDifference).format(DIF_FORMAT);
-  return dayjs(dateTo).diff(dayjs(dateFrom), 'h') + 'H';
+  return dayjs(dateTo).diff(dayjs(dateFrom), 'h');
 }
 
 // function isPointFavorite(favoriting) {

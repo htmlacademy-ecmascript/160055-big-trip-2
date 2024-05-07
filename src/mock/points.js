@@ -1,25 +1,12 @@
 import {getRandomArrayElement} from '../utils.js';
-// import {EVENTTYPES} from '../const.js';
-// [
-//   {
-//   "id": "f4b62099-293f-4c3d-a702-94eec4a2808c",
-//   "base_price": 1100,
-//   "date_from": "2019-07-10T22:55:56.845Z",
-//   "date_to": "2019-07-11T11:22:13.375Z",
-//   "destination": "bfa5cb75-a1fe-4b77-a83c-0e528e910e04",
-//   "is_favorite": false,
-//   "offers": [
-//   "b4c3e4e6-9053-42ce-b747-e281314baa31"
-//   ],
-//   "type": "taxi"
-//   }]
+
 const mockPoints = [
   {
-    id: '1', //f4b62099-293f-4c3d-a702-94eec4a2808c
-    dateFrom: new Date('2019-07-10T22:55:56.845Z'),
-    dateTo: new Date('2019-07-11T11:22:13.375Z'),
+    id: '1',
+    dateFrom: new Date('2024-12-25T18:30:45.123Z'),
+    dateTo: new Date('2024-12-26T08:45:30.987Z'),
     type: 'taxi',
-    destination: 'geneva', //bfa5cb75-a1fe-4b77-a83c-0e528e910e04
+    destination: 'geneva',
     basePrice: 20,
     offers: [
       'taxi1',
@@ -29,11 +16,11 @@ const mockPoints = [
     isFavorite: true,
   },
   {
-    id: '2', //f4b62099-293f-4c3d-a702-94eec4a2808c
-    dateFrom: new Date('2019-07-10T22:55:56.845Z'),
-    dateTo: new Date('2019-07-11T11:22:13.375Z'),
+    id: '2',
+    dateFrom: new Date('2024-07-10T22:55:56.845Z'),
+    dateTo: new Date('2024-07-11T01:30:45.123Z'),
     type: 'bus',
-    destination: 'amsterdam', //bfa5cb75-a1fe-4b77-a83c-0e528e910e04v
+    destination: 'amsterdam',
     basePrice: 600,
     offers: [
       'bus2',
@@ -43,11 +30,11 @@ const mockPoints = [
     isFavorite: false,
   },
   {
-    id: '3', //f4b62099-293f-4c3d-a702-94eec4a2808c
-    dateFrom: new Date('2019-07-10T22:55:56.845Z'),
-    dateTo: new Date('2019-07-11T11:22:13.375Z'),
+    id: '3',
+    dateFrom: new Date('2024-07-12T18:20:30.500Z'),
+    dateTo: new Date('2024-07-13T09:45:15.999Z'),
     type: 'flight',
-    destination: 'chamonix', //bfa5cb75-a1fe-4b77-a83c-0e528e910e04
+    destination: 'chamonix',
     basePrice: 180,
     offers: [
       'flight1'
@@ -55,11 +42,11 @@ const mockPoints = [
     isFavorite: false,
   },
   {
-    id: '4', //f4b62099-293f-4c3d-a702-94eec4a2808c
-    dateFrom: new Date('2019-07-10T22:55:56.845Z'),
-    dateTo: new Date('2019-07-11T11:22:13.375Z'),
+    id: '4',
+    dateFrom: new Date('2024-07-14T14:30:00.123Z'),
+    dateTo: new Date('2024-07-15T08:00:45.678Z'),
     type: 'ship',
-    destination: 'geneva', //bfa5cb75-a1fe-4b77-a83c-0e528e910e04
+    destination: 'geneva',
     basePrice: 135,
     offers: [],
     isFavorite: true,

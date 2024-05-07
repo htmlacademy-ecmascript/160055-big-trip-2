@@ -36,7 +36,7 @@ function createRoutePointTemplate(point, offers, destination) {
           &mdash;
           <time class="event__end-time" datetime="${hourEndEvent}">${hourEndEvent}</time>
         </p>
-        <p class="event__duration">${difHours}</p>
+        <p class="event__duration">${difHours}H</p>
       </div>
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>

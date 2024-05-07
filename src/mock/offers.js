@@ -1,34 +1,25 @@
-// [
-//   {
-//   "type": "taxi",
-//   "offers": [
-//   {
-//   "id": "b4c3e4e6-9053-42ce-b747-e281314baa31",
-//   "title": "Upgrade to a business class",
-//   "price": 120
-//   }]}]
 const mockOffers = [
   {
     type: 'taxi',
     offers: [
       {
         id: 'taxi1',
-        title: 'Taxi1 1123',
+        title: 'Additional mileage',
         price: 150
       },
       {
         id: 'taxi2',
-        title: 'Taxi2 1123',
+        title: 'Extra baggage',
         price: 40
       },
       {
         id: 'taxi3',
-        title: 'Taxi3 1123',
+        title: 'Transportation with animals',
         price: 680
       },
       {
         id: 'taxi4',
-        title: 'Taxi4 1123',
+        title: 'Transportation with children',
         price: 125
       }
     ]
@@ -38,27 +29,27 @@ const mockOffers = [
     offers: [
       {
         id: 'bus1',
-        title: 'Bus1 dasd',
+        title: 'Conditioner',
         price: 220
       },
       {
         id: 'bus2',
-        title: 'Bus2 dasd',
+        title: 'Water Bottle',
         price: 20
       },
       {
         id: 'bus3',
-        title: 'Bus3 dasd',
+        title: 'Extra baggage',
         price: 510
       },
       {
         id: 'bus4',
-        title: 'Bus4 dasd',
+        title: 'Open window',
         price: 10
       },
       {
         id: 'bus5',
-        title: 'Bus5 dasd',
+        title: 'Travel with cinema',
         price: 100
       }
     ]
@@ -68,17 +59,17 @@ const mockOffers = [
     offers: [
       {
         id: 'train1',
-        title: 'Train1 daaqqwe',
+        title: 'Extra baggage',
         price: 40
       },
       {
         id: 'train2',
-        title: 'Train2 daaqqwe',
+        title: 'Shower',
         price: 30
       },
       {
         id: 'train3',
-        title: 'Train3 daaqqwe',
+        title: 'Meals',
         price: 50
       }
     ]
@@ -92,12 +83,12 @@ const mockOffers = [
     offers: [
       {
         id: 'drive1',
-        title: 'Drive1 asdd',
+        title: 'Transportation with children',
         price: 120
       },
       {
         id: 'drive2',
-        title: 'Drive2 asdd',
+        title: 'New point destination',
         price: 220
       }
     ]
@@ -107,7 +98,7 @@ const mockOffers = [
     offers: [
       {
         id: 'flight1',
-        title: 'Flight1 drttt',
+        title: 'Meals',
         price: 180
       }]
   },
@@ -116,27 +107,27 @@ const mockOffers = [
     offers: [
       {
         id: 'check-in1',
-        title: 'Check-in1 das',
+        title: 'Towel',
         price: 90
       },
       {
         id: 'check-in2',
-        title: 'Check-in2 das',
+        title: 'Shower gel and shampoo',
         price: 20
       },
       {
         id: 'check-in3',
-        title: 'Check-in3 das',
+        title: 'Slippers',
         price: 125
       },
       {
         id: 'check-in4',
-        title: 'Check-in4 das',
+        title: 'Dinner',
         price: 30
       },
       {
         id: 'check-in5',
-        title: 'Check-in5 das',
+        title: 'Clean rooms',
         price: 70
       }
     ]
@@ -146,12 +137,12 @@ const mockOffers = [
     offers: [
       {
         id: 'sightseeing1',
-        title: 'Sightseeing1 ghhfr',
+        title: 'Breakfast',
         price: 900
       },
       {
         id: 'sightseeing2',
-        title: 'Sightseeing2 ghhfr',
+        title: 'Binoculars',
         price: 530
       }
     ]
@@ -161,17 +152,17 @@ const mockOffers = [
     offers: [
       {
         id: 'restaurant1',
-        title: 'Restaurant1 dwqqwq',
+        title: 'Add portion',
         price: 670
       },
       {
         id: 'restaurant2',
-        title: 'Restaurant2 dwqqwq',
+        title: 'Water',
         price: 55
       },
       {
         id: 'restaurant3',
-        title: 'Restaurant3 dwqqwq',
+        title: 'Discoteka',
         price: 315
       }
     ]
