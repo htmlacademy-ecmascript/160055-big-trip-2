@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeFormPointDate} from '../utils.js';
 
 function getOffersList({id, title, price}) {
@@ -157,27 +157,29 @@ function createNewFormAddRouteTemplate(point, offers, destination) {
             </li>`);
 }
 
-export default class NewRouteFormView {
+export default class NewRouteFormView extends AbstractView {
+  #point = null;
+  #offers = null;
+  #destination = null;
+  #handleFormSubmit = null;
 
-  constructor({point, offers, destination}) {
-    this.point = point;
-    this.offers = offers;
-    this.destination = destination;
+  constructor({point, offers, destination, onFormSubmit}) {
+    super();
+    this.#point = point;
+    this.#offers = offers;
+    this.#destination = destination;
+    this.#handleFormSubmit = onFormSubmit;
+
+    this.element.querySelector('form')
+      .addEventListener('submit', this.#formSubmitHandler);
   }
 
-  getTemplate() {
-    return createNewFormAddRouteTemplate(this.point, this.offers, this.destination);
+  get template() {
+    return createNewFormAddRouteTemplate(this.#point, this.#offers, this.#destination);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 }
