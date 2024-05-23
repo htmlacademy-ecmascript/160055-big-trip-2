@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {humanizeFormPointDate} from '../utils.js';
+import {humanizeFormPointDate} from '../utils/point.js';
 
 function getOffersList({id, title, price}) {
   return (

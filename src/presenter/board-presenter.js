@@ -4,6 +4,7 @@ import NewSortView from '../view/sort.js';
 import NewPointsListView from '../view/points-list.js';
 import NewRouteFormView from '../view/add-new-route-form.js';
 import NewRoutePointView from '../view/route-point.js';
+import NoPointView from '../view/no-point-view.js';
 import {RenderPosition, render, replace} from '../framework/render.js';
 
 const siteHeaderElement = document.querySelector('.page-header__container');
@@ -27,20 +28,14 @@ export default class BoardPresenter {
   init() {
     this.#boardPoints = [...this.#pointsModel.points];
 
-    render(new NewTripInfoView(), siteHeaderInfoElement, RenderPosition.AFTERBEGIN);
-    render(new NewFilterView(), siteHeaderFilterElement);
-    render(new NewSortView(), siteMainSortElement);
-    render(this.#pointsListComponent, siteMainSortElement);
-    for (let i = 0; i < this.#boardPoints.length; i++) {
-      this.#renderPoint(this.#boardPoints[i]);
-    }
+    this.#renderBoard();
   }
 
   #renderPoint(point) {
     const escKeyDownHandler = (evt) => {
       if (evt.key === 'Escape') {
         evt.preventDefault();
-        replaceFormToCard();
+        replaceFormToPoint();
         document.removeEventListener('keydown', escKeyDownHandler);
       }
     };
@@ -50,7 +45,7 @@ export default class BoardPresenter {
       offers: [...this.#pointsModel.getOffersById(point.type, point.offers)],
       destination: this.#pointsModel.getDestinationsById(point.destination),
       onEditClick: () => {
-        replaceCardToForm();
+        replacePointToForm();
         document.addEventListener('keydown', escKeyDownHandler);
       }
     });
@@ -59,19 +54,36 @@ export default class BoardPresenter {
       offers: this.#pointsModel.getOffersByType(point.type),
       destination: this.#pointsModel.getDestinationsById(point.destination),
       onEditClick: () => {
-        replaceFormToCard();
+        replaceFormToPoint();
         document.addEventListener('keydown', escKeyDownHandler);
       }
     });
 
-    function replaceCardToForm() {
+    function replacePointToForm() {
       replace(pointEditComponent, pointComponent);
     }
 
-    function replaceFormToCard() {
+    function replaceFormToPoint() {
       replace(pointComponent, pointEditComponent);
     }
 
     render(pointComponent, this.#pointsListComponent.element);
+  }
+
+  #renderBoard() {
+    render(this.#pointsListComponent, this.#boardContainer);
+    render(new NewFilterView(), siteHeaderFilterElement);
+    if (this.#boardPoints.length === 0) {
+      render(new NoPointView(), siteMainSortElement);
+      return;
+    }
+    render(new NewTripInfoView(), siteHeaderInfoElement, RenderPosition.AFTERBEGIN);
+
+
+    render(new NewSortView(), siteMainSortElement);
+    render(this.#pointsListComponent, siteMainSortElement);
+    for (let i = 0; i < this.#boardPoints.length; i++) {
+      this.#renderPoint(this.#boardPoints[i]);
+    }
   }
 }
