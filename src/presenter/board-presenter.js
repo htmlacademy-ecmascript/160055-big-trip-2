@@ -4,7 +4,8 @@ import NewSortView from '../view/sort.js';
 import NewPointsListView from '../view/points-list.js';
 import NewRouteFormView from '../view/add-new-route-form.js';
 import NewRoutePointView from '../view/route-point.js';
-import {RenderPosition, render} from '../render.js';
+import NoPointView from '../view/no-point-view.js';
+import {RenderPosition, render, replace} from '../framework/render.js';
 
 const siteHeaderElement = document.querySelector('.page-header__container');
 const siteHeaderInfoElement = siteHeaderElement.querySelector('.trip-main');
@@ -12,33 +13,77 @@ const siteHeaderFilterElement = siteHeaderInfoElement.querySelector('.trip-contr
 
 const siteMainSortElement = document.querySelector('.trip-events');
 export default class BoardPresenter {
-  pointsListComponent = new NewPointsListView();
+  #boardContainer;
+  #pointsModel;
+
+  #pointsListComponent = new NewPointsListView();
+
+  #boardPoints = [];
 
   constructor({boardContainer, pointsModel}) {
-    this.boardContainer = boardContainer;
-    this.pointsModel = pointsModel;
+    this.#boardContainer = boardContainer;
+    this.#pointsModel = pointsModel;
   }
 
   init() {
-    this.boardPoints = [...this.pointsModel.getPoints()];
+    this.#boardPoints = [...this.#pointsModel.points];
 
-    render(new NewTripInfoView(), siteHeaderInfoElement, RenderPosition.AFTERBEGIN);
+    this.#renderBoard();
+  }
+
+  #renderPoint(point) {
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceFormToPoint();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+
+    const pointComponent = new NewRoutePointView({
+      point: point,
+      offers: [...this.#pointsModel.getOffersById(point.type, point.offers)],
+      destination: this.#pointsModel.getDestinationsById(point.destination),
+      onEditClick: () => {
+        replacePointToForm();
+        document.addEventListener('keydown', escKeyDownHandler);
+      }
+    });
+    const pointEditComponent = new NewRouteFormView({
+      point: point,
+      offers: this.#pointsModel.getOffersByType(point.type),
+      destination: this.#pointsModel.getDestinationsById(point.destination),
+      onEditClick: () => {
+        replaceFormToPoint();
+        document.addEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    function replacePointToForm() {
+      replace(pointEditComponent, pointComponent);
+    }
+
+    function replaceFormToPoint() {
+      replace(pointComponent, pointEditComponent);
+    }
+
+    render(pointComponent, this.#pointsListComponent.element);
+  }
+
+  #renderBoard() {
+    render(this.#pointsListComponent, this.#boardContainer);
     render(new NewFilterView(), siteHeaderFilterElement);
-    render(new NewSortView(), siteMainSortElement);
-    render(this.pointsListComponent, siteMainSortElement);
-    render(new NewRouteFormView({
-      point: this.boardPoints[0],
-      offers: this.pointsModel.getOffersByType(this.boardPoints[0].type),
-      checkedOffers: [...this.pointsModel.getOffersById(this.boardPoints[0].type, this.boardPoints[0].offers)],
-      destination: this.pointsModel.getDestinationsById(this.boardPoints[0].destination)
-    }), this.pointsListComponent.getElement());
+    if (this.#boardPoints.length === 0) {
+      render(new NoPointView(), siteMainSortElement);
+      return;
+    }
+    render(new NewTripInfoView(), siteHeaderInfoElement, RenderPosition.AFTERBEGIN);
 
-    for (let i = 1; i < this.boardPoints.length; i++) {
-      render(new NewRoutePointView({
-        point: this.boardPoints[i],
-        offers: [...this.pointsModel.getOffersById(this.boardPoints[i].type, this.boardPoints[i].offers)],
-        destination: this.pointsModel.getDestinationsById(this.boardPoints[i].destination)
-      }), this.pointsListComponent.getElement());
+
+    render(new NewSortView(), siteMainSortElement);
+    render(this.#pointsListComponent, siteMainSortElement);
+    for (let i = 0; i < this.#boardPoints.length; i++) {
+      this.#renderPoint(this.#boardPoints[i]);
     }
   }
 }

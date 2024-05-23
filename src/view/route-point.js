@@ -1,5 +1,5 @@
-import {createElement} from '../render.js';
-import {humanizePointDate, humanizePointHour, getDifferenceDate} from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import {humanizePointDate, humanizePointHour, getDifferenceDate} from '../utils/point.js';
 
 function getOffersList({title, price}) {
   return (`<li class="event__offer">
@@ -58,27 +58,29 @@ function createRoutePointTemplate(point, offers, destination) {
   </li>`);
 }
 
-export default class NewRoutePointView {
+export default class NewRoutePointView extends AbstractView {
+  #point = null;
+  #offers = null;
+  #destination = null;
+  #handleEditClick = null;
 
-  constructor({point, offers, destination}) {
-    this.point = point;
-    this.offers = offers;
-    this.destination = destination;
+  constructor({point, offers, destination, onEditClick}) {
+    super();
+    this.#point = point;
+    this.#offers = offers;
+    this.#destination = destination;
+    this.#handleEditClick = onEditClick;
+
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#editClickHandler);
   }
 
-  getTemplate() {
-    return createRoutePointTemplate(this.point, this.offers, this.destination);
+  get template() {
+    return createRoutePointTemplate(this.#point, this.#offers, this.#destination);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }
