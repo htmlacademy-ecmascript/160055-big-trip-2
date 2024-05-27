@@ -49,7 +49,7 @@ function getDestinationOptionsTemplate(destination) {
 `);
 }
 
-function createNewFormAddRouteTemplate(point, offers, destination) {
+function createFormAddRouteTemplate(point, offers, destination) {
 
   const {dateFrom, type, basePrice, dateTo} = point;
   const {name} = destination;
@@ -157,7 +157,7 @@ function createNewFormAddRouteTemplate(point, offers, destination) {
             </li>`);
 }
 
-export default class NewRouteFormView extends AbstractView {
+export default class RouteFormView extends AbstractView {
   #point = null;
   #offers = null;
   #destination = null;
@@ -175,7 +175,7 @@ export default class NewRouteFormView extends AbstractView {
   }
 
   get template() {
-    return createNewFormAddRouteTemplate(this.#point, this.#offers, this.#destination);
+    return createFormAddRouteTemplate(this.#point, this.#offers, this.#destination);
   }
 
   #formSubmitHandler = (evt) => {

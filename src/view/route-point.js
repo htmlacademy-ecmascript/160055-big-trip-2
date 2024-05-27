@@ -58,7 +58,7 @@ function createRoutePointTemplate(point, offers, destination) {
   </li>`);
 }
 
-export default class NewRoutePointView extends AbstractView {
+export default class RoutePointView extends AbstractView {
   #point = null;
   #offers = null;
   #destination = null;
@@ -71,8 +71,7 @@ export default class NewRoutePointView extends AbstractView {
     this.#destination = destination;
     this.#handleEditClick = onEditClick;
 
-    this.element.querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
   get template() {
