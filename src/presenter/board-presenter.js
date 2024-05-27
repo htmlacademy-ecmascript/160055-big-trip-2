@@ -1,22 +1,19 @@
-import NewTripInfoView from '../view/trip-info.js';
-import NewFilterView from '../view/filters.js';
-import NewSortView from '../view/sort.js';
-import NewPointsListView from '../view/points-list.js';
-import NewRouteFormView from '../view/add-new-route-form.js';
-import NewRoutePointView from '../view/route-point.js';
+import TripInfoView from '../view/trip-info.js';
+import PointsListView from '../view/points-list.js';
+import RouteFormEditView from '../view/edit-point.js';
+import RoutePointView from '../view/route-point.js';
 import NoPointView from '../view/no-point-view.js';
 import {RenderPosition, render, replace} from '../framework/render.js';
 
 const siteHeaderElement = document.querySelector('.page-header__container');
 const siteHeaderInfoElement = siteHeaderElement.querySelector('.trip-main');
-const siteHeaderFilterElement = siteHeaderInfoElement.querySelector('.trip-controls__filters');
 
 const siteMainSortElement = document.querySelector('.trip-events');
 export default class BoardPresenter {
   #boardContainer;
   #pointsModel;
 
-  #pointsListComponent = new NewPointsListView();
+  #pointsListComponent = new PointsListView();
 
   #boardPoints = [];
 
@@ -40,7 +37,7 @@ export default class BoardPresenter {
       }
     };
 
-    const pointComponent = new NewRoutePointView({
+    const pointComponent = new RoutePointView({
       point: point,
       offers: [...this.#pointsModel.getOffersById(point.type, point.offers)],
       destination: this.#pointsModel.getDestinationsById(point.destination),
@@ -49,13 +46,13 @@ export default class BoardPresenter {
         document.addEventListener('keydown', escKeyDownHandler);
       }
     });
-    const pointEditComponent = new NewRouteFormView({
+    const pointEditComponent = new RouteFormEditView({
       point: point,
       offers: this.#pointsModel.getOffersByType(point.type),
       destination: this.#pointsModel.getDestinationsById(point.destination),
-      onEditClick: () => {
+      onFormSubmit: () => {
         replaceFormToPoint();
-        document.addEventListener('keydown', escKeyDownHandler);
+        document.removeEventListener('keydown', escKeyDownHandler);
       }
     });
 
@@ -72,15 +69,11 @@ export default class BoardPresenter {
 
   #renderBoard() {
     render(this.#pointsListComponent, this.#boardContainer);
-    render(new NewFilterView(), siteHeaderFilterElement);
     if (this.#boardPoints.length === 0) {
       render(new NoPointView(), siteMainSortElement);
       return;
     }
-    render(new NewTripInfoView(), siteHeaderInfoElement, RenderPosition.AFTERBEGIN);
-
-
-    render(new NewSortView(), siteMainSortElement);
+    render(new TripInfoView(), siteHeaderInfoElement, RenderPosition.AFTERBEGIN);
     render(this.#pointsListComponent, siteMainSortElement);
     for (let i = 0; i < this.#boardPoints.length; i++) {
       this.#renderPoint(this.#boardPoints[i]);
