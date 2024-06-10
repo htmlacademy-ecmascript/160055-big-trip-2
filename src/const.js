@@ -1,4 +1,5 @@
-const POINTS_COUNT = 4;
+const POINTS_COUNT = 3;
+const DEFAULT_SORT_NAME = 'day';
 
 const FilterType = {
   EVERTHING: 'everthing',
@@ -7,7 +8,7 @@ const FilterType = {
   PAST: 'past',
 };
 
-const SortingType = {
+const SortType = {
   DAY: 'day',
   EVENT: 'event',
   TIME: 'time',
@@ -15,4 +16,4 @@ const SortingType = {
   OFFERS: 'offers',
 };
 
-export {POINTS_COUNT, FilterType, SortingType};
+export {POINTS_COUNT, DEFAULT_SORT_NAME, FilterType, SortType};
