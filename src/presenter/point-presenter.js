@@ -8,10 +8,10 @@ const Mode = {
 };
 
 export default class PointPresenter {
-  #boardContainer;
-  #pointsModel;
-  #handleDataChange;
-  #handleModeChange;
+  #boardContainer = null;
+  #pointsModel = null;
+  #handleDataChange = null;
+  #handleModeChange = null;
 
   #pointComponent = null;
   #pointEditComponent = null;

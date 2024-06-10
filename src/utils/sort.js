@@ -1,11 +1,11 @@
-import {SortingType} from '../const.js';
+import {SortType} from '../const.js';
 
 const sort = {
-  [SortingType.DAY]: (points) => points.filter((point) => point),
-  [SortingType.EVENT]: (points) => points.filter((point) => point),
-  [SortingType.TIME]: (points) => points.filter((point) => point),
-  [SortingType.PRICE]: (points) => points.filter((point) => point),
-  [SortingType.OFFERS]: (points) => points.filter((point) => point),
+  [SortType.DAY]: { isEnabled: 'true'},
+  [SortType.EVENT]: { isEnabled: 'false'},
+  [SortType.TIME]: { isEnabled: 'true'},
+  [SortType.PRICE]: { isEnabled: 'true'},
+  [SortType.OFFERS]: { isEnabled: 'false'},
 };
 
 export {sort};

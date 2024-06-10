@@ -20,8 +20,24 @@ function humanizePointHour(hour) {
 function getDifferenceDate(dateFrom, dateTo) {
   return dayjs(dateTo).diff(dayjs(dateFrom), 'h');
 }
+
 function isPointExpiringToday(dueDate) {
   return dueDate && dayjs(dueDate).isSame(dayjs(), 'D');
 }
 
-export {humanizePointDate, humanizeFormPointDate, humanizePointHour, getDifferenceDate, isPointExpiringToday};
+function sortByDay(pointA, pointB) {
+  return pointA.dateFrom - pointB.dateFrom;
+}
+
+function sortByTime(pointA, pointB) {
+  const timeAPoint = getDifferenceDate(pointA.dateFrom, pointA.dateTo);
+  const timeBPoint = getDifferenceDate(pointB.dateFrom, pointB.dateTo);
+
+  return timeAPoint - timeBPoint;
+}
+
+function sortByPrice(pointA, pointB) {
+  return pointA.basePrice - pointB.basePrice;
+}
+
+export {humanizePointDate, humanizeFormPointDate, humanizePointHour, getDifferenceDate, isPointExpiringToday, sortByDay, sortByTime, sortByPrice};

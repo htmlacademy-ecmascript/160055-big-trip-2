@@ -32,8 +32,8 @@ const mockPoints = [
   },
   {
     id: '3',
-    dateFrom: new Date('2024-07-12T18:20:30.500Z'),
-    dateTo: new Date('2024-07-13T09:45:15.999Z'),
+    dateFrom: new Date('2024-09-12T18:20:30.500Z'),
+    dateTo: new Date('2024-09-13T09:45:15.999Z'),
     type: 'flight',
     destination: 'chamonix',
     basePrice: 180,
@@ -44,12 +44,24 @@ const mockPoints = [
   },
   {
     id: '4',
-    dateFrom: new Date('2024-07-14T14:30:00.123Z'),
-    dateTo: new Date('2024-07-15T08:00:45.678Z'),
+    dateFrom: new Date('2024-10-14T14:30:00.123Z'),
+    dateTo: new Date('2024-10-15T08:00:45.678Z'),
     type: 'ship',
     destination: 'geneva',
     basePrice: 135,
     offers: [],
+    isFavorite: true,
+  },
+  {
+    id: '5',
+    dateFrom: new Date('2024-03-14T10:30:00.123Z'),
+    dateTo: new Date('2024-03-15T08:24:45.678Z'),
+    type: 'flight',
+    destination: 'geneva',
+    basePrice: 430,
+    offers: [
+      'flight1'
+    ],
     isFavorite: true,
   }
 ];
