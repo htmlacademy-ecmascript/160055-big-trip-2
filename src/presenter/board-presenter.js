@@ -73,7 +73,7 @@ export default class BoardPresenter {
         this.#boardPoints.sort(sortByPrice);
         break;
       case SortType.DAY:
-        this.#boardPoints = [...this.#sourcedBoardPoints];
+        this.#boardPoints.sort(sortByDay);
     }
 
     this.#currentSortType = sortType;

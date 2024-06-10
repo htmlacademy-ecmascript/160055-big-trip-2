@@ -3,7 +3,6 @@ import {DEFAULT_SORT_NAME} from '../const.js';
 
 function createSortElementTemplate(sort) {
   const {type, isEnable} = sort;
-
   return (
     `<div class="trip-sort__item  trip-sort__item--${type}">
     <input id="sort-${type}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${type}" ${isEnable ? '' : 'disabled'} ${type === DEFAULT_SORT_NAME ? 'checked' : ''}>
