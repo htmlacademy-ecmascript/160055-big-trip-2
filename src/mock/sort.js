@@ -2,9 +2,9 @@ import {sort} from '../utils/sort.js';
 
 function generateSorting() {
   return Object.entries(sort).map(
-    ([sortType]) => ({
+    ([sortType, {isEnabled}]) => ({
       type: sortType,
-      isEnable: sortType.isEnabled
+      isEnable: isEnabled
     }),
   );
 }
