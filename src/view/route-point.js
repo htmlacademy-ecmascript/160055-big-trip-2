@@ -10,7 +10,7 @@ function getOffersList({title, price}) {
 }
 
 function createRoutePointTemplate(point, offers, destination) {
-  const {dateFrom, type, basePrice, isFavorite, dateTo} = point;
+  const {dateFrom, dateTo, type, basePrice, isFavorite} = point;
   const {name} = destination;
 
   const dateEvent = humanizePointDate(dateFrom);
@@ -36,7 +36,7 @@ function createRoutePointTemplate(point, offers, destination) {
           &mdash;
           <time class="event__end-time" datetime="${hourEndEvent}">${hourEndEvent}</time>
         </p>
-        <p class="event__duration">${difHours}H</p>
+        <p class="event__duration">${difHours}</p>
       </div>
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>

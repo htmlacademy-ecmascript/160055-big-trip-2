@@ -5,7 +5,7 @@ const mockPoints = [
   {
     id: '1',
     dateFrom: new Date('2024-12-25T18:30:45.123Z'),
-    dateTo: new Date('2024-12-26T08:45:30.987Z'),
+    dateTo: new Date('2024-12-25T18:45:30.987Z'),
     type: 'taxi',
     destination: 'geneva',
     basePrice: 20,

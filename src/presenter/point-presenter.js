@@ -42,7 +42,9 @@ export default class PointPresenter {
     this.#pointEditComponent = new RouteFormEditView({
       point: this.#point,
       offers: this.#pointsModel.getOffersByType(point.type),
+      checkedOffers: [...this.#pointsModel.getOffersById(point.type, point.offers)],
       destination: this.#pointsModel.getDestinationsById(point.destination),
+      destinations: this.#pointsModel.destinations,
       onFormSubmit: this.#handleFormSubmit,
     });
 
