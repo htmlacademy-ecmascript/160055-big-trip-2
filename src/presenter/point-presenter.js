@@ -1,6 +1,6 @@
 import {render, replace, remove} from '../framework/render.js';
-import RoutePointView from '../view/route-point.js';
-import RouteFormEditView from '../view/edit-point.js';
+import RoutePointView from '../view/route-point-view.js';
+import RouteFormEditView from '../view/route-form-edit-view.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',

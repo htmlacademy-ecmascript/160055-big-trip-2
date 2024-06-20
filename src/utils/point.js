@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
 const DATE_FORMAT = 'MMM DD';
 const HOUR_FORMAT = 'HH:mm';
@@ -25,13 +27,13 @@ function humanizePointHour(hour) {
 }
 
 function getDifferenceDate(dateFrom, dateTo) {
-  const difference = dayjs(dateTo).diff(dayjs(dateFrom));
+  const difference = dayjs.utc(dateTo).diff(dayjs(dateFrom));
   if (difference / milli < 60) {
-    return dayjs(difference).format(MINUTES_FORMAT);
+    return dayjs.utc(difference).format(MINUTES_FORMAT);
   } else if (difference / milli > 60 && difference / milli < 60 * 24) {
-    return dayjs(difference).format(HOURS_FORMAT);
+    return dayjs.utc(difference).format(HOURS_FORMAT);
   } else {
-    return dayjs(difference).format(DAYS_FORMAT);
+    return dayjs.utc(difference).format(DAYS_FORMAT);
   }
 }
 

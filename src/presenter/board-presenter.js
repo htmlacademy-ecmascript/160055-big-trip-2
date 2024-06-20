@@ -1,11 +1,11 @@
-import TripInfoView from '../view/trip-info.js';
-import PointsListView from '../view/points-list.js';
+import TripInfoView from '../view/trip-info-view.js';
+import PointsListView from '../view/points-list-view.js';
 import NoPointView from '../view/no-point-view.js';
 import {RenderPosition, render} from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
 import {updateItem} from '../utils/common.js';
-import SortView from '../view/sort.js';
-import FilterView from '../view/filters.js';
+import SortView from '../view/sort-view.js';
+import FilterView from '../view/filter-view.js';
 import {SortType} from '../const.js';
 import {sortByDay, sortByTime, sortByPrice} from '../utils/point.js';
 import {DEFAULT_SORT_NAME} from '../const.js';

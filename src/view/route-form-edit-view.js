@@ -3,11 +3,11 @@ import {capitalize, humanizeFormPointDate} from '../utils/point.js';
 import {mockOffers} from '../mock/offers.js';
 import {mockDestinations} from '../mock/destinations.js';
 
-function getTypesList({type}) {
+function getTypesList({type, id}) {
   return (
     `<div class="event__type-item">
-      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${capitalize(type)}</label>
+      <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${id}">${capitalize(type)}</label>
     </div>`
   );
 }
@@ -24,7 +24,7 @@ function getOffersList(offers, checkedOffers) {
   const isChecked = checkedOffers.map((item) => item.id).includes(id) ? 'checked' : '';
   return (
     `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="${id}" type="checkbox" name="event-offer-luggage" ${isChecked}>
+        <input class="event__offer-checkbox  visually-hidden" data-offer-id="${id}" id="${id}" type="checkbox" name="event-offer-luggage" ${isChecked}>
         <label class="event__offer-label" for="event-offer-luggage-${id}">
           <span class="event__offer-title">${title}</span>
           &plus;&euro;&nbsp;
@@ -46,6 +46,9 @@ function getTemplateOffers({offers}, checkedOffers) {
 }
 
 function getDestinationOptionsTemplate(destination) {
+  if (!destination) {
+    return;
+  }
   const {description} = destination;
   return (`<section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -54,13 +57,12 @@ function getDestinationOptionsTemplate(destination) {
           `);
 }
 
-function createFormEditRouteTemplate(point, offers, checkedOffers, destination) {
+function createFormEditRouteTemplate({point}, offers, checkedOffers, destination) {
 
   const {id, dateFrom, type, basePrice, dateTo} = point;
   const {name} = destination;
   const dateBegin = humanizeFormPointDate(dateFrom);
   const dateEnd = humanizeFormPointDate(dateTo);
-
   return (`<li class="trip-events__item">
             <form class="event event--edit" action="#" method="post">
               <header class="event__header">
@@ -120,7 +122,6 @@ function createFormEditRouteTemplate(point, offers, checkedOffers, destination) 
 }
 
 export default class RouteFormEditView extends AbstractStatefulView {
-  #point = null;
   #offers = null;
   #checkedOffers = null;
   #destination = null;
@@ -129,31 +130,36 @@ export default class RouteFormEditView extends AbstractStatefulView {
 
   constructor({point, offers, checkedOffers, destination, destinations, onFormSubmit = () => {}}) {
     super();
-    this.#point = point;
     this.#offers = offers;
     this.#checkedOffers = checkedOffers;
     this.#destination = destination;
     this.#destinations = destinations;
     this.#handleFormSubmit = onFormSubmit;
 
-    this._setState(RouteFormEditView.parsePointToState(point));
+    this._setState(RouteFormEditView.parsePointToState({point}));
     this._restoreHandlers();
   }
 
   _restoreHandlers = () => {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
+    this.element.querySelectorAll('.event__type-input').forEach((type) => {
+      type.addEventListener('click', this.#typeChangeHandler);
+    });
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
-    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerChangeHandler);
+    this.element.querySelectorAll('.event__offer-checkbox').forEach((checkbox) => {
+      checkbox.addEventListener('change', this.#offerChangeHandler);
+    });
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
   };
 
   get template() {
-    return createFormEditRouteTemplate(this.#point, this.#offers, this.#checkedOffers, this.#checkedOffers, this.#destination, this.#destinations, this._state);
+    return createFormEditRouteTemplate(this._state, this.#offers, this.#checkedOffers, this.#destination, this.#destinations);
   }
 
-  reset = (point) => this.updateElement({point});
+  reset(point) {
+    this.updateElement(RouteFormEditView.parsePointToState({point}));
+  }
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
@@ -173,14 +179,16 @@ export default class RouteFormEditView extends AbstractStatefulView {
   #offerChangeHandler = () => {
     const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
 
-    this._setState({point: {...this._state.point, offers: checkedOffers.map((element) => element.CDATA_SECTION_NODE.offerId)}});
+    this._setState({point: {...this._state.point, offers: checkedOffers.map((offer) => offer.dataset.offerId)}});
   };
 
   #priceChangeHandler = (evt) => {
-    this._setState({point: {...this._state.point, basePrice: evt.target.valueAsNumber}});
+    this._setState({point: {...this._state.point, basePrice: Number(evt.target.value)}});
   };
 
-  static parsePointToState = ({point}) => ({point});
+  static parsePointToState(point) {
+    return {...point};
+  }
 
   static parseStateToPoint = (state) => state.point;
 }
