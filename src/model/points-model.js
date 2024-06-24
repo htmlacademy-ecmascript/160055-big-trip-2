@@ -18,7 +18,7 @@ export default class PointsModel {
   }
 
   getOffersByType(type) {
-    const offersArray = this.offers;
+    const offersArray = this.#offers;
     return offersArray.find((offer) => offer.type === type);
   }
 
@@ -34,5 +34,10 @@ export default class PointsModel {
   getDestinationsById(id) {
     const destinationArray = this.destinations;
     return destinationArray.find((item) => item.id === id);
+  }
+
+  getDestinationByTargetName(name) {
+    const destinationArray = this.destinations;
+    return destinationArray.find((item) => item.name === name);
   }
 }

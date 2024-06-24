@@ -2,12 +2,14 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {capitalize, humanizeFormPointDate} from '../utils/point.js';
 import {mockOffers} from '../mock/offers.js';
 import {mockDestinations} from '../mock/destinations.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
-function getTypesList({type, id}) {
+function getTypesList({type}) {
   return (
     `<div class="event__type-item">
-      <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${id}">${capitalize(type)}</label>
+      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${capitalize(type)}</label>
     </div>`
   );
 }
@@ -19,22 +21,21 @@ function getDestinationName(destination) {
     `);
 }
 
-function getOffersList(offers, checkedOffers) {
-  const {id, title, price} = offers;
-  const isChecked = checkedOffers.map((item) => item.id).includes(id) ? 'checked' : '';
-  return (
-    `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" data-offer-id="${id}" id="${id}" type="checkbox" name="event-offer-luggage" ${isChecked}>
-        <label class="event__offer-label" for="event-offer-luggage-${id}">
-          <span class="event__offer-title">${title}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${price}</span>
-        </label>
-      </div>`
-  );
-}
-
 function getTemplateOffers({offers}, checkedOffers) {
+  const getOffersList = ({id, title, price}) => {
+    const isChecked = checkedOffers.map((item) => item.id).includes(id) ? 'checked' : '';
+    return (
+      `<div class="event__offer-selector">
+          <input class="event__offer-checkbox  visually-hidden" data-offer-id="${id}" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" ${isChecked}>
+          <label class="event__offer-label" for="event-offer-${id}">
+            <span class="event__offer-title">${title}</span>
+            &plus;&euro;&nbsp;
+            <span class="event__offer-price">${price}</span>
+          </label>
+        </div>`
+    );
+  };
+
   return (`
   <section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
@@ -57,9 +58,8 @@ function getDestinationOptionsTemplate(destination) {
           `);
 }
 
-function createFormEditRouteTemplate({point}, offers, checkedOffers, destination) {
-
-  const {id, dateFrom, type, basePrice, dateTo} = point;
+function createFormEditRouteTemplate(state, offers, checkedOffers, destination) {
+  const {id, dateFrom, type, basePrice, dateTo} = state;
   const {name} = destination;
   const dateBegin = humanizeFormPointDate(dateFrom);
   const dateEnd = humanizeFormPointDate(dateTo);
@@ -114,7 +114,7 @@ function createFormEditRouteTemplate({point}, offers, checkedOffers, destination
                 </button>
               </header>
               <section class="event__details">
-                ${getTemplateOffers(offers, checkedOffers)}
+                ${offers.length !== 0 ? getTemplateOffers(offers, checkedOffers) : ''}
                 ${getDestinationOptionsTemplate(destination)}
               </section>
             </form>
@@ -125,41 +125,55 @@ export default class RouteFormEditView extends AbstractStatefulView {
   #offers = null;
   #checkedOffers = null;
   #destination = null;
-  #destinations = null;
   #handleFormSubmit = null;
+  #pointsModel = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
-  constructor({point, offers, checkedOffers, destination, destinations, onFormSubmit = () => {}}) {
+  constructor({point, offers, checkedOffers, destination, onFormSubmit = () => {}, pointsModel}) {
     super();
     this.#offers = offers;
     this.#checkedOffers = checkedOffers;
     this.#destination = destination;
-    this.#destinations = destinations;
     this.#handleFormSubmit = onFormSubmit;
+    this.#pointsModel = pointsModel;
 
-    this._setState(RouteFormEditView.parsePointToState({point}));
+    this._setState(RouteFormEditView.parsePointToState(point));
     this._restoreHandlers();
   }
 
   _restoreHandlers = () => {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
-    this.element.querySelectorAll('.event__type-input').forEach((type) => {
-      type.addEventListener('click', this.#typeChangeHandler);
-    });
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
-    this.element.querySelectorAll('.event__offer-checkbox').forEach((checkbox) => {
-      checkbox.addEventListener('change', this.#offerChangeHandler);
-    });
+    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
+
+    this.#setDatepickers();
   };
 
   get template() {
-    return createFormEditRouteTemplate(this._state, this.#offers, this.#checkedOffers, this.#destination, this.#destinations);
+    return createFormEditRouteTemplate(this._state, this.#offers, this.#checkedOffers, this.#destination);
   }
 
   reset(point) {
-    this.updateElement(RouteFormEditView.parsePointToState({point}));
+    this.updateElement(RouteFormEditView.parsePointToState(point));
   }
+
+  removeElement = () => {
+    super.removeElement();
+
+    if(this.#datepickerFrom) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+
+    if(this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
+    }
+  };
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
@@ -167,28 +181,75 @@ export default class RouteFormEditView extends AbstractStatefulView {
   };
 
   #typeChangeHandler = (evt) => {
-    this.updateElement({point: {...this._state.point, type: evt.target.value, offers: []}});
+    evt.preventDefault();
+    // console.log(this._state);
+    this.updateElement(this.#pointsModel.getOffersByType(evt.target.value), this.#checkedOffers = []);
+    // console.log(this.#pointsModel.getOffersByType(evt.target.value));
+    // console.log(this._state);
   };
 
   #destinationChangeHandler = (evt) => {
-    const selectedDestination = this.#destinations.find((pointDestination) => pointDestination.name === evt.target.value);
-    const selectedDestinationId = (selectedDestination) ? selectedDestination.id : null;
-    this.updateElement({point: {...this._state.point, destination: selectedDestinationId}});
+    const selectedDestination = this.#pointsModel.getDestinationByTargetName(evt.target.value);
+    const selectedDestinationName = selectedDestination ? selectedDestination.id : null;
+    this.updateElement({destination: selectedDestinationName ? selectedDestinationName : ''});
   };
 
-  #offerChangeHandler = () => {
+  #offerChangeHandler = (evt) => {
+    evt.preventDefault();
     const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
-
-    this._setState({point: {...this._state.point, offers: checkedOffers.map((offer) => offer.dataset.offerId)}});
+    this._setState({offers: checkedOffers.map((offer) => offer.dataset.offerId)});
   };
 
   #priceChangeHandler = (evt) => {
-    this._setState({point: {...this._state.point, basePrice: Number(evt.target.value)}});
+    evt.preventDefault();
+    this._setState({basePrice: Number(evt.target.value)});
+  };
+
+  #dateFromCloseHandler = (userDate) => {
+    this._setState({dateFrom: userDate});
+    this.#datepickerTo.set('minDate', this._state.dateFrom);
+  };
+
+  #dateToCloseHandler = (userDate) => {
+    this._setState({dateTo: userDate});
+    this.#datepickerTo.set('maxDate', this._state.dateTo);
+  };
+
+  #setDatepickers = () => {
+    const [dateFromElement, dateToElement] = this.element.querySelectorAll('.event__input--time');
+    const commonConfig = {
+      dateFormat: 'd/m/y H:i',
+      enableTime: true,
+      locale: {firstDayOfWeek: 1},
+      'time_24hr': true
+    };
+
+    this.#datepickerFrom = flatpickr(
+      dateFromElement,
+      {
+        ...commonConfig,
+        defaultDate: this._state.dateFrom,
+        onClose: this.#dateFromCloseHandler,
+        maxDate: this._state.dateTo
+      }
+    );
+
+    this.#datepickerTo = flatpickr(
+      dateToElement,
+      {
+        ...commonConfig,
+        defaultDate: this._state.dateFrom,
+        onClose: this.#dateToCloseHandler,
+        maxDate: this._state.dateTo
+      }
+    );
   };
 
   static parsePointToState(point) {
     return {...point};
   }
 
-  static parseStateToPoint = (state) => state.point;
+  static parseStateToPoint(state) {
+    return {...state};
+  }
 }

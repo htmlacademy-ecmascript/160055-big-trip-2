@@ -44,8 +44,8 @@ export default class PointPresenter {
       offers: this.#pointsModel.getOffersByType(point.type),
       checkedOffers: [...this.#pointsModel.getOffersById(point.type, point.offers)],
       destination: this.#pointsModel.getDestinationsById(point.destination),
-      destinations: this.#pointsModel.destinations,
       onFormSubmit: this.#handleFormSubmit,
+      pointsModel: this.#pointsModel,
     });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -75,13 +75,11 @@ export default class PointPresenter {
       evt.preventDefault();
       this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
-      document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
   };
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
-      this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   }

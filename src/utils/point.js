@@ -11,6 +11,10 @@ const DAYS_FORMAT = 'DD[D] HH[H] mm[M]';
 const FIELD_DATE_FORMAT = 'DD/MM/YY HH:mm';
 const milli = 60000;
 
+function lower(type) {
+  return type.toLowerCase();
+}
+
 function capitalize(type) {
   return type[0].toUpperCase() + type.slice(1);
 }
@@ -45,11 +49,11 @@ function sortByTime(pointA, pointB) {
   const timeAPoint = dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
   const timeBPoint = dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom));
 
-  return timeAPoint - timeBPoint;
+  return timeBPoint - timeAPoint;
 }
 
 function sortByPrice(pointA, pointB) {
-  return pointA.basePrice - pointB.basePrice;
+  return pointB.basePrice - pointA.basePrice;
 }
 
-export {capitalize, humanizePointDate, humanizeFormPointDate, humanizePointHour, getDifferenceDate, sortByDay, sortByTime, sortByPrice};
+export {lower, capitalize, humanizePointDate, humanizeFormPointDate, humanizePointHour, getDifferenceDate, sortByDay, sortByTime, sortByPrice};
