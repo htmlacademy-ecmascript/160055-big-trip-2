@@ -1,12 +1,19 @@
-import {getRandomPoint} from '../mock/points.js';
+import {getRandomArrayElement} from '../utils/common.js';
 import {mockOffers} from '../mock/offers.js';
+import {mockPoints} from '../mock/points.js';
 import {mockDestinations} from '../mock/destinations.js';
 import {POINTS_COUNT} from '../const.js';
+import {nanoid} from 'nanoid';
 
-
+function getRandomPoint() {
+  return {
+    id: nanoid(),
+    ...getRandomArrayElement(mockPoints)
+  };
+}
 export default class PointsModel {
   #points = Array.from({length: POINTS_COUNT}, getRandomPoint);
-  #offers = mockOffers;
+  #dataOffers = mockOffers;
   #destinations = mockDestinations;
 
   get points() {
@@ -14,30 +21,10 @@ export default class PointsModel {
   }
 
   get offers() {
-    return this.#offers;
-  }
-
-  getOffersByType(type) {
-    const offersArray = this.#offers;
-    return offersArray.find((offer) => offer.type === type);
-  }
-
-  getOffersById(type, itemsId) {
-    const offersType = this.getOffersByType(type);
-    return offersType.offers.filter((item) => itemsId.find((id) => item.id === id));
+    return this.#dataOffers;
   }
 
   get destinations() {
     return this.#destinations;
-  }
-
-  getDestinationsById(id) {
-    const destinationArray = this.destinations;
-    return destinationArray.find((item) => item.id === id);
-  }
-
-  getDestinationByTargetName(name) {
-    const destinationArray = this.destinations;
-    return destinationArray.find((item) => item.name === name);
   }
 }

@@ -1,6 +1,30 @@
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
+// eslint-disable-next-line no-undef
+const isSameOrBefore = require('dayjs/plugin/isSameOrBefore');
+dayjs.extend(isSameOrBefore);
+
+// eslint-disable-next-line no-undef
+const isSameOrAfter = require('dayjs/plugin/isSameOrAfter');
+dayjs.extend(isSameOrAfter);
+
+// eslint-disable-next-line no-undef
+const duration = require('dayjs/plugin/duration');
+dayjs.extend(duration);
+// eslint-disable-next-line no-undef
+const utc = require('dayjs/plugin/utc');
 dayjs.extend(utc);
+
+function isPointInPast(endDate) {
+  return endDate && dayjs().isAfter(endDate, 'D');
+}
+
+function isPointInPresent(startDate, endDate) {
+  return dayjs().isSameOrAfter(startDate, 'D') && dayjs().isSameOrBefore(endDate, 'D');
+}
+
+function isPointInFuture(startDate) {
+  return startDate && dayjs().isBefore(startDate, 'D');
+}
 
 const DATE_FORMAT = 'MMM DD';
 const HOUR_FORMAT = 'HH:mm';
@@ -15,19 +39,15 @@ function lower(type) {
   return type.toLowerCase();
 }
 
-function capitalize(type) {
-  return type[0].toUpperCase() + type.slice(1);
-}
-
 function humanizePointDate(dateFrom) {
-  return dateFrom ? dayjs(dateFrom).format(DATE_FORMAT) : '';
+  return dateFrom ? dayjs.utc(dateFrom).format(DATE_FORMAT) : '';
 }
 function humanizeFormPointDate(dateFrom) {
-  return dateFrom ? dayjs(dateFrom).format(FIELD_DATE_FORMAT) : '';
+  return dateFrom ? dayjs.utc(dateFrom).format(FIELD_DATE_FORMAT) : '';
 }
 
 function humanizePointHour(hour) {
-  return hour ? dayjs(hour).format(HOUR_FORMAT) : '';
+  return hour ? dayjs.utc(hour).format(HOUR_FORMAT) : '';
 }
 
 function getDifferenceDate(dateFrom, dateTo) {
@@ -42,7 +62,7 @@ function getDifferenceDate(dateFrom, dateTo) {
 }
 
 function sortByDay(pointA, pointB) {
-  return pointA.dateFrom - pointB.dateFrom;
+  return dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
 }
 
 function sortByTime(pointA, pointB) {
@@ -56,4 +76,10 @@ function sortByPrice(pointA, pointB) {
   return pointB.basePrice - pointA.basePrice;
 }
 
-export {lower, capitalize, humanizePointDate, humanizeFormPointDate, humanizePointHour, getDifferenceDate, sortByDay, sortByTime, sortByPrice};
+const getPointTypeOffer = (offersMocks,pointMocks) => offersMocks.find((offer)=> offer.type === pointMocks.type);
+
+const getDestinationById = (destMocks, pointMocks) => destMocks.find((item)=> item.id === pointMocks.destination);
+
+const getDestinationByTargetName = (destMocks, targetName) => destMocks.find((item)=> item.name === targetName);
+
+export {isPointInPast, isPointInPresent, isPointInFuture, lower, humanizePointDate, humanizeFormPointDate, humanizePointHour, getDifferenceDate, sortByDay, sortByTime, sortByPrice, getPointTypeOffer, getDestinationById, getDestinationByTargetName};

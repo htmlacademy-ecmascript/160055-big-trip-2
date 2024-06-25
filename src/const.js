@@ -16,4 +16,8 @@ const SortType = {
   OFFERS: 'offers',
 };
 
-export {POINTS_COUNT, DEFAULT_SORT_NAME, FilterType, SortType};
+const TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const SORTS = Object.values(SortType);
+const CITIES = ['Amsterdam', 'Geneva', 'Chamonix'];
+
+export {POINTS_COUNT, DEFAULT_SORT_NAME, FilterType, SortType, TYPES, SORTS, CITIES};
