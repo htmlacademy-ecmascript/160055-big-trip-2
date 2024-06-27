@@ -1,19 +1,15 @@
-import BoardPresenter from './presenter/board-presenter.js';
+import TripPresenter from './presenter/trip-presenter.js';
 import PointsModel from './model/points-model.js';
-import {generateFilter} from './mock/filter.js';
-import {generateSorting} from './mock/sort.js';
-import {FilterType, SortType} from './const.js';
 
-const siteMainElement = document.querySelector('.page-body__page-main');
+const siteMainElement = document.querySelector('.page-main');
+const tripMainElement = document.querySelector('.trip-main');
 
 const pointsModel = new PointsModel();
-const sorts = generateSorting(SortType);
-const filters = generateFilter(FilterType);
-const boardPresenter = new BoardPresenter({
-  boardContainer: siteMainElement,
-  pointsModel: pointsModel,
-  sorts: sorts,
-  filters: filters,
+
+const boardPresenter = new TripPresenter({
+  main: siteMainElement,
+  pointsModel,
+  tripMain: tripMainElement,
 });
 
 boardPresenter.init();

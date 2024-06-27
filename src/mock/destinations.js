@@ -40,8 +40,7 @@ const mockDestinations = [
         description: 'Chamonix pic4.'
       }
     ]
-  }
-  ,
+  },
   {
     id: 'geneva',
     description: 'Geneva is a city in Switzerland that is known for its role as a center for international diplomacy and home to numerous international organizations. It is located at the southern tip of Lake Geneva, where the Rhône River exits the lake. Geneva is the capital of the Republic and Canton of Geneva and is the second most populous city in Switzerland after Zurich. The city is also a major financial center and a hub for global business, making it an important destination for international conferences and summits. Geneva is renowned for its scenic beauty, with the Alps providing a stunning backdrop, and its rich cultural life, featuring a variety of museums, galleries, and theaters.',
@@ -56,6 +55,12 @@ const mockDestinations = [
         description: 'Geneva pic2.'
       }
     ]
+  },
+  {
+    id: 'none',
+    description: '',
+    name: '',
+    pictures: []
   }
 ];
 

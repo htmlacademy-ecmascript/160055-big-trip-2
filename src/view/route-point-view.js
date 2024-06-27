@@ -1,17 +1,11 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {humanizePointDate, humanizePointHour, getDifferenceDate} from '../utils/point.js';
+import {humanizePointDate, humanizePointHour, getDifferenceDate, getPointTypeOffer, getDestinationById} from '../utils/point.js';
 
-function getOffersList({title, price}) {
-  return (`<li class="event__offer">
-  <span class="event__offer-title">${title}</span>
-  &plus;&euro;&nbsp;
-  <span class="event__offer-price">${price}</span>
-</li>`);
-}
+function createRoutePointTemplate(point, dataOffers, destination) {
+  const {dateFrom, dateTo, type, basePrice, isFavorite, offers} = point;
 
-function createRoutePointTemplate(point, offers, destination) {
-  const {dateFrom, type, basePrice, isFavorite, dateTo} = point;
-  const {name} = destination;
+  const destinationById = getDestinationById(destination, point);
+  const pointTypeOffer = getPointTypeOffer(dataOffers, point);
 
   const dateEvent = humanizePointDate(dateFrom);
   const hourBeginEvent = humanizePointHour(dateFrom);
@@ -19,9 +13,7 @@ function createRoutePointTemplate(point, offers, destination) {
   const eventTypeSrc = type.toLowerCase();
   const difHours = getDifferenceDate(dateFrom, dateTo);
 
-  const favoriteClassName = isFavorite
-    ? 'event__favorite-btn--active'
-    : '';
+  const favoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
 
   return (`<li class="trip-events__item">
     <div class="event">
@@ -29,21 +21,29 @@ function createRoutePointTemplate(point, offers, destination) {
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${eventTypeSrc}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} ${name}</h3>
+      <h3 class="event__title">${type} ${destinationById ? destinationById.name : ''}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="${hourBeginEvent}">${hourBeginEvent}</time>
           &mdash;
           <time class="event__end-time" datetime="${hourEndEvent}">${hourEndEvent}</time>
         </p>
-        <p class="event__duration">${difHours}H</p>
+        <p class="event__duration">${difHours}</p>
       </div>
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-        ${offers.map((offer) => getOffersList(offer)).join('')}
+      ${pointTypeOffer.offers.map((item)=>{
+      const userOffer = offers.includes(item.id) ?
+        `<li class="event__offer">
+        <span class="event__offer-title">${item.title}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${item.price}</span>
+        </li>` : '';
+      return userOffer;
+    }).join('')}
       </ul>
       <button class="event__favorite-btn ${favoriteClassName}" type="button">
         <span class="visually-hidden">Add to favorite</span>
@@ -60,15 +60,15 @@ function createRoutePointTemplate(point, offers, destination) {
 
 export default class RoutePointView extends AbstractView {
   #point = null;
-  #offers = null;
+  #dataOffers = null;
   #destination = null;
   #handleEditClick = null;
   #handleFavoriteClick = null;
 
-  constructor({point, offers, destination, onEditClick, onFavoriteClick}) {
+  constructor({point, dataOffers, destination, onEditClick, onFavoriteClick}) {
     super();
     this.#point = point;
-    this.#offers = offers;
+    this.#dataOffers = dataOffers;
     this.#destination = destination;
     this.#handleEditClick = onEditClick;
     this.#handleFavoriteClick = onFavoriteClick;
@@ -78,7 +78,7 @@ export default class RoutePointView extends AbstractView {
   }
 
   get template() {
-    return createRoutePointTemplate(this.#point, this.#offers, this.#destination);
+    return createRoutePointTemplate(this.#point, this.#dataOffers, this.#destination);
   }
 
   #editClickHandler = (evt) => {

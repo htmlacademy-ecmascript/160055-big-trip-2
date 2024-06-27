@@ -157,7 +157,7 @@ function createFormAddRouteTemplate(point, offers, destination) {
             </li>`);
 }
 
-export default class RouteFormView extends AbstractView {
+export default class AddNewRouteForm extends AbstractView {
   #point = null;
   #offers = null;
   #destination = null;
