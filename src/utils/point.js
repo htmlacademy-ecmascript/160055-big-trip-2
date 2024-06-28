@@ -57,7 +57,7 @@ function getDifferenceDate(dateFrom, dateTo) {
   } else if (difference < 24) {
     return dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom))).format(HOURS_FORMAT);
   } else if (difference >= 24) {
-    return dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom))).format(YEARS_FORMAT);
+    return dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom))).format(DAYS_FORMAT);
   } else if (difference > 24 * 365) {
     return dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom))).format(YEARS_FORMAT);
   }
