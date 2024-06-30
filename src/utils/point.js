@@ -31,9 +31,9 @@ const HOUR_FORMAT = 'HH:mm';
 const MINUTES_FORMAT = 'mm[M]';
 const HOURS_FORMAT = 'HH[H] mm[M]';
 const DAYS_FORMAT = 'DD[D] HH[H] mm[M]';
+const YEARS_FORMAT = 'YY[y] DD[D] HH[H] mm[M]';
 
 const FIELD_DATE_FORMAT = 'DD/MM/YY HH:mm';
-const milli = 60000;
 
 function lower(type) {
   return type.toLowerCase();
@@ -51,13 +51,15 @@ function humanizePointHour(hour) {
 }
 
 function getDifferenceDate(dateFrom, dateTo) {
-  const difference = dayjs.utc(dateTo).diff(dayjs(dateFrom));
-  if (difference / milli < 60) {
-    return dayjs.utc(difference).format(MINUTES_FORMAT);
-  } else if (difference / milli > 60 && difference / milli < 60 * 24) {
-    return dayjs.utc(difference).format(HOURS_FORMAT);
-  } else {
-    return dayjs.utc(difference).format(DAYS_FORMAT);
+  const difference = dayjs(dateTo).diff(dayjs(dateFrom), 'hour');
+  if (difference < 1) {
+    return dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom))).format(MINUTES_FORMAT);
+  } else if (difference < 24) {
+    return dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom))).format(HOURS_FORMAT);
+  } else if (difference >= 24) {
+    return dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom))).format(DAYS_FORMAT);
+  } else if (difference > 24 * 365) {
+    return dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom))).format(YEARS_FORMAT);
   }
 }
 
