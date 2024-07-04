@@ -1,21 +1,25 @@
 import RouteFormView from '../view/route-form-view.js';
 import {getDestinationByTargetName} from '../utils/point.js';
+import {BLANK_POINT} from '../const.js';
 
 import dayjs from 'dayjs';
-// const utc = require('dayjs/plugin/utc');
-// dayjs.extend(utc);
+// eslint-disable-next-line no-undef
+const utc = require('dayjs/plugin/utc');
+dayjs.extend(utc);
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 export default class RouteFormEditView extends RouteFormView {
   _handleEditFormButtonClick = null;
   #datepickerFrom = null;
   #datepickerTo = null;
+  #handleDeleteClick = null;
 
-  constructor({point, dataOffers, destination, isAddPoint, onFormSubmit, onEditFormButtonClick}) {
-    super({point, dataOffers, destination, isAddPoint, onFormSubmit});
+  constructor({point = BLANK_POINT, dataOffers, dataDestinations, isAddPoint, onFormSubmit, onEditFormButtonClick, onDeleteClick}) {
+    super({point, dataOffers, dataDestinations, isAddPoint, onFormSubmit});
 
     this._setState(RouteFormEditView.parsePointToState(point));
     this._handleEditFormButtonClick = onEditFormButtonClick;
+    this.#handleDeleteClick = onDeleteClick;
     this._restoreHandlers();
   }
 
@@ -29,6 +33,7 @@ export default class RouteFormEditView extends RouteFormView {
     this.element.querySelectorAll('.event__offer-checkbox').forEach((checkbox)=> checkbox.addEventListener('change', this.#offerChangeHandler));
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
 
     this.#setDatepicker();
   };
@@ -62,7 +67,7 @@ export default class RouteFormEditView extends RouteFormView {
 
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
-    const destinationId = getDestinationByTargetName(this._destination, evt.target.value).id;
+    const destinationId = getDestinationByTargetName(this._dataDestinations, evt.target.value).id;
     this.updateElement({
       destination: destinationId ? destinationId : ''
     });
@@ -116,11 +121,8 @@ export default class RouteFormEditView extends RouteFormView {
     );
   }
 
-  static parsePointToState(point) {
-    return {...point};
-  }
-
-  static parseStateToPoint(state) {
-    return {...state};
-  }
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(RouteFormEditView.parseStateToPoint(this._state));
+  };
 }

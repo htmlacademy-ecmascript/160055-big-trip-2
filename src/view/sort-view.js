@@ -1,28 +1,30 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {SORTS} from '../const.js';
 
-function createSortElementTemplate(sort) {
+function createSortElementTemplate(sortType, currentSortType) {
 
-  const disable = (sort === 'event' || sort === 'offers') ? 'disabled' : '';
+  const disable = (sortType === 'event' || sortType === 'offers') ? 'disabled' : '';
   return (
-    `<div class="trip-sort__item  trip-sort__item--${sort}">
-      <input data-sort-type="${sort}" id="sort-${sort}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${sort}" ${disable}>
-      <label class="trip-sort__btn" for="sort-${sort}">${sort}</label>
+    `<div class="trip-sort__item  trip-sort__item--${sortType}">
+      <input data-sort-type="${sortType}" id="sort-${sortType}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${sortType}" ${disable}${sortType === currentSortType ? 'checked' : ''}>
+      <label class="trip-sort__btn" for="sort-${sortType}">${sortType}</label>
     </div>`
   );
 }
 
-function createSortTemplate() {
+function createSortTemplate(currentSortType) {
   return (`<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-  ${SORTS.map((sortItem) => createSortElementTemplate(sortItem)).join('')}
+  ${SORTS.map((sortItem) => createSortElementTemplate(sortItem, currentSortType)).join('')}
 </form>`);
 }
 
 export default class SortView extends AbstractView {
   #onSortTypeChange = null;
+  #currentSortType = null;
 
-  constructor({onSortTypeChange}) {
+  constructor({currentSortType, onSortTypeChange}) {
     super();
+    this.#currentSortType = currentSortType;
     this.#onSortTypeChange = onSortTypeChange;
 
     const sortLabel = this.element.querySelectorAll('.trip-sort__input');
@@ -32,7 +34,7 @@ export default class SortView extends AbstractView {
   }
 
   get template() {
-    return createSortTemplate();
+    return createSortTemplate(this.#currentSortType);
   }
 
   #sortTypeChangeHandler = (evt) => {

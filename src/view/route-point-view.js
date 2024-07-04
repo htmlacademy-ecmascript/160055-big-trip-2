@@ -1,10 +1,10 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {humanizePointDate, humanizePointHour, getDifferenceDate, getPointTypeOffer, getDestinationById} from '../utils/point.js';
 
-function createRoutePointTemplate(point, dataOffers, destination) {
+function createRoutePointTemplate(point, dataOffers, dataDestinations) {
   const {dateFrom, dateTo, type, basePrice, isFavorite, offers} = point;
 
-  const destinationById = getDestinationById(destination, point);
+  const destinationById = getDestinationById(dataDestinations, point);
   const pointTypeOffer = getPointTypeOffer(dataOffers, point);
 
   const dateEvent = humanizePointDate(dateFrom);
@@ -61,15 +61,15 @@ function createRoutePointTemplate(point, dataOffers, destination) {
 export default class RoutePointView extends AbstractView {
   #point = null;
   #dataOffers = null;
-  #destination = null;
+  #dataDestinations = null;
   #handleEditClick = null;
   #handleFavoriteClick = null;
 
-  constructor({point, dataOffers, destination, onEditClick, onFavoriteClick}) {
+  constructor({point, dataOffers, dataDestinations, onEditClick, onFavoriteClick}) {
     super();
     this.#point = point;
     this.#dataOffers = dataOffers;
-    this.#destination = destination;
+    this.#dataDestinations = dataDestinations;
     this.#handleEditClick = onEditClick;
     this.#handleFavoriteClick = onFavoriteClick;
 
@@ -78,7 +78,7 @@ export default class RoutePointView extends AbstractView {
   }
 
   get template() {
-    return createRoutePointTemplate(this.#point, this.#dataOffers, this.#destination);
+    return createRoutePointTemplate(this.#point, this.#dataOffers, this.#dataDestinations);
   }
 
   #editClickHandler = (evt) => {

@@ -60,11 +60,11 @@ function createOffersSelectorTemplate(dataOffers, point, isAddPoint) {
   }
 }
 
-function createDestinationSelectorTemplate(destination, point) {
-  const destinationById = getDestinationById(destination, point);
+function createDestinationSelectorTemplate(dataDestinations, point) {
+  const destinationById = getDestinationById(dataDestinations, point);
 
   return (
-    destinationById.description || destinationById.pictures ?
+    destinationById ?
       `<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
     <p class="event__destination-description">${destinationById.description}</p>
@@ -78,9 +78,9 @@ function createDestinationSelectorTemplate(destination, point) {
   );
 }
 
-function createEditPointFormTemplate(point, dataOffers, destination, isAddPoint) {
+function createEditPointFormTemplate(point, dataOffers, dataDestinations, isAddPoint) {
   const {dateFrom, type, basePrice, dateTo} = point;
-  const destinationById = getDestinationById(destination, point);
+  const destinationById = getDestinationById(dataDestinations, point);
   const dateBegin = humanizeFormPointDate(dateFrom);
   const dateEnd = humanizeFormPointDate(dateTo);
   return (`<li class="trip-events__item">
@@ -113,10 +113,10 @@ function createEditPointFormTemplate(point, dataOffers, destination, isAddPoint)
 
                 <div class="event__field-group  event__field-group--time">
                   <label class="visually-hidden" for="event-start-time-${point.id}">From</label>
-                  <input class="event__input  event__input--time" id="event-start-time-${point.id}" type="text" name="event-start-time" value="${dateBegin}">
+                  <input class="event__input  event__input--time" id="event-start-time-${point.id}" type="text" name="event-start-time" value="${!isAddPoint ? dateBegin : ''}">
                   &mdash;
                   <label class="visually-hidden" for="event-end-time-${point.id}">To</label>
-                  <input class="event__input  event__input--time" id="event-end-time-${point.id}" type="text" name="event-end-time" value="${dateEnd}">
+                  <input class="event__input  event__input--time" id="event-end-time-${point.id}" type="text" name="event-end-time" value="${!isAddPoint ? dateEnd : ''}">
                 </div>
 
                 <div class="event__field-group  event__field-group--price">
@@ -135,7 +135,7 @@ function createEditPointFormTemplate(point, dataOffers, destination, isAddPoint)
               </header>
               <section class="event__details">
                 ${createOffersSelectorTemplate(dataOffers, point, isAddPoint)}
-                ${createDestinationSelectorTemplate(destination, point)}
+                ${createDestinationSelectorTemplate(dataDestinations, point)}
               </section>
             </form>
           </li>`);
@@ -143,14 +143,14 @@ function createEditPointFormTemplate(point, dataOffers, destination, isAddPoint)
 
 export default class RouteFormView extends AbstractStatefulView {
   _dataOffers = null;
-  _destination = null;
+  _dataDestinations = null;
   _handleFormSubmit = null;
   _isAddPoint = false;
 
-  constructor({point, dataOffers, destination, isAddPoint, onFormSubmit}) {
+  constructor({point, dataOffers, dataDestinations, isAddPoint, onFormSubmit}) {
     super();
     this._dataOffers = dataOffers;
-    this._destination = destination;
+    this._dataDestinations = dataDestinations;
     this._isAddPoint = isAddPoint;
 
     this._setState(RouteFormView.parsePointToState(point));
@@ -164,7 +164,7 @@ export default class RouteFormView extends AbstractStatefulView {
   };
 
   get template() {
-    return createEditPointFormTemplate(this._state, this._dataOffers, this._destination, this._isAddPoint);
+    return createEditPointFormTemplate(this._state, this._dataOffers, this._dataDestinations, this._isAddPoint);
   }
 
   reset(point) {

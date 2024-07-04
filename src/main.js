@@ -1,15 +1,30 @@
 import TripPresenter from './presenter/trip-presenter.js';
 import PointsModel from './model/points-model.js';
+import FilterModel from './model/filter-model.js';
 
 const siteMainElement = document.querySelector('.page-main');
 const tripMainElement = document.querySelector('.trip-main');
+const addEventButton = document.querySelector('.trip-main__event-add-btn');
+addEventButton.addEventListener('click', handleNewPointButtonClick);
 
 const pointsModel = new PointsModel();
+const filterModel = new FilterModel();
 
-const boardPresenter = new TripPresenter({
+const tripPresenter = new TripPresenter({
   main: siteMainElement,
   pointsModel,
   tripMain: tripMainElement,
+  filterModel,
+  onNewPointDestroy: handleNewPointFormClose
 });
 
-boardPresenter.init();
+function handleNewPointFormClose() {
+  addEventButton.disabled = false;
+}
+
+function handleNewPointButtonClick() {
+  tripPresenter.createPoint();
+  addEventButton.disabled = true;
+}
+
+tripPresenter.init();

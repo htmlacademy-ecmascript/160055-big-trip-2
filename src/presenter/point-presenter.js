@@ -1,6 +1,8 @@
 import {render, replace, remove} from '../framework/render.js';
 import RoutePointView from '../view/route-point-view.js';
 import RouteFormEditView from '../view/route-form-edit-view.js';
+import {UserAction, UpdateType} from '../const.js';
+import {isPointInPast, isPointInPresent, isPointInFuture} from '../utils/point.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -17,7 +19,7 @@ export default class PointPresenter {
 
   #point = null;
   #dataOffers = null;
-  #destination = null;
+  #dataDestinations = null;
   #mode = Mode.DEFAULT;
 
   constructor({pointListContainer, onDataChange, onModeChange}) {
@@ -26,10 +28,10 @@ export default class PointPresenter {
     this.#handleModeChange = onModeChange;
   }
 
-  init(point, dataOffers, destination) {
+  init(point, dataOffers, dataDestinations) {
     this.#point = point;
     this.#dataOffers = dataOffers;
-    this.#destination = destination;
+    this.#dataDestinations = dataDestinations;
 
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
@@ -37,7 +39,7 @@ export default class PointPresenter {
     this.#pointComponent = new RoutePointView({
       point: this.#point,
       dataOffers: this.#dataOffers,
-      destination: this.#destination,
+      dataDestinations: this.#dataDestinations,
       isAddPoint: false,
       onEditClick: this.#handlePointArrowClick,
       onFavoriteClick: this.#handleFavoriteClick,
@@ -46,10 +48,11 @@ export default class PointPresenter {
     this.#pointEditComponent = new RouteFormEditView({
       point: this.#point,
       dataOffers: this.#dataOffers,
-      destination: this.#destination,
+      dataDestinations: this.#dataDestinations,
       isAddPoint: false,
       onFormSubmit: this.#handleFormSubmit,
       onEditFormButtonClick: this.#handleEditClick,
+      onDeleteClick: this.#handleDeleteClick
     });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -103,7 +106,11 @@ export default class PointPresenter {
   }
 
   #handleFavoriteClick = () => {
-    this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      {...this.#point, isFavorite: !this.#point.isFavorite},
+    );
   };
 
   #handleEditClick = () => {
@@ -116,9 +123,25 @@ export default class PointPresenter {
     document.addEventListener('keydown', this.#escKeyDownHandler);
   };
 
-  #handleFormSubmit = (point) => {
-    this.#handleDataChange(point);
+  #handleFormSubmit = (update) => {
+    const isMinorUpdate =
+    isPointInPast(this.#point.dateTo) !== isPointInPast(update.dateTo) || isPointInPresent(this.#point.dateFrom, this.#point.dateTo) !== isPointInPresent(this.#point.dateFrom, this.#point.dateTo) ||
+    isPointInFuture(this.#point.dateFrom) !== isPointInFuture(update.dateFrom);
+
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      update
+    );
     this.#replaceFormToPoint();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
   };
 }
