@@ -1,13 +1,19 @@
 import TripPresenter from './presenter/trip-presenter.js';
 import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
+import PointsApiService from './points-api-service.js';
+
+const AUTHORIZATION = 'Basic h5vpbygzbriwj5w';
+const END_POINT = 'https://22.objects.htmlacademy.pro';
 
 const siteMainElement = document.querySelector('.page-main');
 const tripMainElement = document.querySelector('.trip-main');
 const addEventButton = document.querySelector('.trip-main__event-add-btn');
 addEventButton.addEventListener('click', handleNewPointButtonClick);
 
-const pointsModel = new PointsModel();
+const pointsModel = new PointsModel({
+  pointApiService: new PointsApiService(END_POINT, AUTHORIZATION)
+});
 const filterModel = new FilterModel();
 
 const tripPresenter = new TripPresenter({
@@ -26,5 +32,5 @@ function handleNewPointButtonClick() {
   tripPresenter.createPoint();
   addEventButton.disabled = true;
 }
-
+pointsModel.init();
 tripPresenter.init();

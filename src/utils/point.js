@@ -31,7 +31,6 @@ const HOUR_FORMAT = 'HH:mm';
 const MINUTES_FORMAT = 'mm[M]';
 const HOURS_FORMAT = 'HH[H] mm[M]';
 const DAYS_FORMAT = 'DD[D] HH[H] mm[M]';
-const YEARS_FORMAT = 'YY[y] DD[D] HH[H] mm[M]';
 
 const FIELD_DATE_FORMAT = 'DD/MM/YY HH:mm';
 
@@ -50,16 +49,16 @@ function humanizePointHour(hour) {
   return hour ? dayjs.utc(hour).format(HOUR_FORMAT) : '';
 }
 
+const changeDateFormat = (date, dateFormat)=> dayjs(date).format(dateFormat);
+
 function getDifferenceDate(dateFrom, dateTo) {
   const difference = dayjs(dateTo).diff(dayjs(dateFrom), 'hour');
-  if (difference < 1) {
+  if (difference <= 1) {
     return dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom))).format(MINUTES_FORMAT);
   } else if (difference < 24) {
     return dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom))).format(HOURS_FORMAT);
   } else if (difference >= 24) {
     return dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom))).format(DAYS_FORMAT);
-  } else if (difference > 24 * 365) {
-    return dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom))).format(YEARS_FORMAT);
   }
 }
 
@@ -84,4 +83,4 @@ const getDestinationById = (destMocks, pointMocks) => destMocks.find((item)=> it
 
 const getDestinationByTargetName = (destMocks, targetName) => destMocks.find((item)=> item.name === targetName);
 
-export {isPointInPast, isPointInPresent, isPointInFuture, lower, humanizePointDate, humanizeFormPointDate, humanizePointHour, getDifferenceDate, sortByDay, sortByTime, sortByPrice, getPointTypeOffer, getDestinationById, getDestinationByTargetName};
+export {changeDateFormat, isPointInPast, isPointInPresent, isPointInFuture, lower, humanizePointDate, humanizeFormPointDate, humanizePointHour, getDifferenceDate, sortByDay, sortByTime, sortByPrice, getPointTypeOffer, getDestinationById, getDestinationByTargetName};

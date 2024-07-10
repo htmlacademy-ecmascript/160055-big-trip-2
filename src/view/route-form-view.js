@@ -24,13 +24,14 @@ function createOffersSelectorTemplate(dataOffers, point, isAddPoint) {
     <div class="event__available-offers">
     ${pointTypeOffer.offers.map((item, index)=>
         `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${pointTypeOffer.type}-${index}" type="checkbox" name="event-offer-${pointTypeOffer.type}">
-    <label class="event__offer-label" for="event-offer-${pointTypeOffer.type}-${index}">
-      <span class="event__offer-title">${item.title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${item.price}</span>
-    </label>
-  </div>`).join('')}
+          <input class="event__offer-checkbox  visually-hidden" data-offer-id="${item.id}" id="event-offer-${pointTypeOffer.type}-${index}" type="checkbox" name="event-offer-${pointTypeOffer.type}">
+          <label class="event__offer-label" for="event-offer-${pointTypeOffer.type}-${index}">
+            <span class="event__offer-title">${item.title}</span>
+            &plus;&euro;&nbsp;
+            <span class="event__offer-price">${item.price}</span>
+          </label>
+        </div>
+    `).join('')}
     </div>
   </section>` : ''
     );
@@ -79,7 +80,7 @@ function createDestinationSelectorTemplate(dataDestinations, point) {
 }
 
 function createEditPointFormTemplate(point, dataOffers, dataDestinations, isAddPoint) {
-  const {dateFrom, type, basePrice, dateTo} = point;
+  const {dateFrom, type, basePrice, dateTo, isDisabled, isSaving, isDeleting} = point;
   const destinationById = getDestinationById(dataDestinations, point);
   const dateBegin = humanizeFormPointDate(dateFrom);
   const dateEnd = humanizeFormPointDate(dateTo);
@@ -124,11 +125,11 @@ function createEditPointFormTemplate(point, dataOffers, dataDestinations, isAddP
                     <span class="visually-hidden">Price</span>
                     &euro;
                   </label>
-                  <input class="event__input  event__input--price" id="event-price-${point.id}" type="text" name="event-price" value="${basePrice}">
+                  <input class="event__input  event__input--price" id="event-price-${point.id}" type="number" name="event-price" value="${isAddPoint ? 0 : basePrice}">
                 </div>
 
-                <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-                <button class="event__reset-btn" type="reset">Delete</button>
+                <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+                <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting' : 'Delete' }</button>
                 <button class="event__rollup-btn" type="button">
                   <span class="visually-hidden">Open event</span>
                 </button>
@@ -145,7 +146,6 @@ export default class RouteFormView extends AbstractStatefulView {
   _dataOffers = null;
   _dataDestinations = null;
   _handleFormSubmit = null;
-  _isAddPoint = false;
 
   constructor({point, dataOffers, dataDestinations, isAddPoint, onFormSubmit}) {
     super();
@@ -172,11 +172,18 @@ export default class RouteFormView extends AbstractStatefulView {
   }
 
   static parsePointToState(point) {
-    return {...point};
+    return {...point,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    };
   }
 
   static parseStateToPoint(state) {
     const point = {...state};
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
     return point;
   }
 }
