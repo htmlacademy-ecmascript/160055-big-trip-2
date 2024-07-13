@@ -2,10 +2,6 @@ import RouteFormView from '../view/route-form-view.js';
 import {getDestinationByTargetName} from '../utils/point.js';
 import {BLANK_POINT} from '../const.js';
 
-import dayjs from 'dayjs';
-// eslint-disable-next-line no-undef
-const utc = require('dayjs/plugin/utc');
-dayjs.extend(utc);
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 export default class RouteFormEditView extends RouteFormView {
@@ -27,7 +23,7 @@ export default class RouteFormEditView extends RouteFormView {
     this.element.addEventListener('submit', this._formSubmitHandler);
     if(this.element.querySelector('.event__rollup-btn')){
       this.element.querySelector('.event__rollup-btn')
-        .addEventListener('click', this._formSubmitHandler);
+        .addEventListener('click', this._editFormButtonHandler);
     }
     this.element.querySelectorAll('.event__type-input').forEach((type)=> type.addEventListener('click',this.#typeChangeHandler));
     this.element.querySelectorAll('.event__offer-checkbox').forEach((checkbox)=> checkbox.addEventListener('change', this.#offerChangeHandler));
@@ -67,7 +63,8 @@ export default class RouteFormEditView extends RouteFormView {
 
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
-    const destinationId = getDestinationByTargetName(this._dataDestinations, evt.target.value).id;
+    const destinationByTargetName = getDestinationByTargetName(this._dataDestinations, evt.target.value);
+    const destinationId = destinationByTargetName ? destinationByTargetName.id : null;
     this.updateElement({
       destination: destinationId ? destinationId : ''
     });
@@ -82,20 +79,20 @@ export default class RouteFormEditView extends RouteFormView {
   #priceChangeHandler = (evt) => {
     evt.preventDefault();
     this._setState({
-      basePrice: evt.target.value
+      basePrice: Number(evt.target.value)
     });
   };
 
   #dateChangeHandler = ([userDateFrom]) => {
     this.updateElement({
-      dateFrom: dayjs(userDateFrom).toISOString(),
-      dateTo: dayjs(userDateFrom).toISOString(),
+      dateFrom: userDateFrom,
+      dateTo: userDateFrom,
     });
   };
 
   #dateToChangeHandler = ([userDateTo]) => {
     this.updateElement({
-      dateTo: dayjs(userDateTo).toISOString(),
+      dateTo: userDateTo,
     });
   };
 
