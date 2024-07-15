@@ -99,7 +99,7 @@ export default class TripPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#pointPresenters.get(data.id).init(data, this.#pointsModel.offers, this.#pointsModel.destinations);
+        this.#pointPresenters.get(data.id).init(data, this.offers, this.destinations);
         this.#infoTripPresenter.destroy();
         this.#renderInfoTrip();
         break;
@@ -128,6 +128,7 @@ export default class TripPresenter {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
     const filteredPoints = filterObject[this.#filterType](points);
+    const defaultSortedPoints = filteredPoints.sort(sortByDay);
 
     switch (this.#currentSortType) {
       case SortType.TIME:
@@ -135,13 +136,20 @@ export default class TripPresenter {
       case SortType.PRICE:
         return filteredPoints.sort(sortByPrice);
     }
-    return filteredPoints.sort(sortByDay);
+    return defaultSortedPoints;
+  }
+
+  get offers () {
+    const offers = this.#pointsModel.offers;
+    return offers;
+  }
+
+  get destinations () {
+    const destinations = this.#pointsModel.destinations;
+    return destinations;
   }
 
   init() {
-    // this.#offers = [...this.#pointsModel.offers];
-    // this.#destinations = [...this.#pointsModel.destinations];
-
     this.#renderFilter();
     this.#renderSort();
     this.#renderPointList();
@@ -150,7 +158,7 @@ export default class TripPresenter {
   createPoint() {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#addPointPresenter.init(this.#pointsModel.offers, this.#pointsModel.destinations);
+    this.#addPointPresenter.init(this.offers, this.destinations);
   }
 
   #renderPoint(point, dataOffers, dataDestinations) {
@@ -164,14 +172,14 @@ export default class TripPresenter {
   }
 
   #renderPoints(points) {
-    points.forEach((point)=> this.#renderPoint(point, this.#pointsModel.offers, this.#pointsModel.destinations));
+    points.forEach((point)=> this.#renderPoint(point, this.offers, this.destinations));
   }
 
   #renderInfoTrip() {
     this.#infoTripPresenter = new InfoTripPresenter({
       tripMainElement: this.#tripMain,
     });
-    this.#infoTripPresenter.init(this.#pointsModel.points, this.#pointsModel.offers, this.#pointsModel.destinations);
+    this.#infoTripPresenter.init(this.#pointsModel.points, this.offers, this.destinations);
   }
 
   #handleModeChange = () => {
@@ -194,6 +202,7 @@ export default class TripPresenter {
     this.#currentSortType = sortType;
     this.#clearTripBoard();
     this.#renderSort();
+    this.#renderInfoTrip();
     this.#renderPointList();
   };
 

@@ -1,6 +1,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import {humanizeFormPointDate, getPointTypeOffer, getDestinationById} from '../utils/point.js';
-import {TYPES, CITIES} from '../const.js';
+import {getPointTypeOffer, getDestinationById} from '../utils/point.js';
+import {TYPES} from '../const.js';
 import he from 'he';
 
 function getTypesList(type, id) {
@@ -80,10 +80,9 @@ function createDestinationSelectorTemplate(dataDestinations, point) {
 }
 
 function createEditPointFormTemplate(point, dataOffers, dataDestinations, isAddPoint) {
-  const {dateFrom, type, basePrice, dateTo, isDisabled, isSaving, isDeleting} = point;
+  const {type, basePrice, isDisabled, isSaving, isDeleting} = point;
   const destinationById = getDestinationById(dataDestinations, point);
-  const dateBegin = humanizeFormPointDate(dateFrom);
-  const dateEnd = humanizeFormPointDate(dateTo);
+  const cities = dataDestinations.map((item)=>item.name);
   return (`<li class="trip-events__item">
             <form class="event event--edit" action="#" method="post">
               <header class="event__header">
@@ -106,18 +105,18 @@ function createEditPointFormTemplate(point, dataOffers, dataDestinations, isAddP
                   <label class="event__label  event__type-output" for="event-destination-${point.id}">
                     ${type}
                   </label>
-                  <input class="event__input  event__input--destination" id="event-destination-${point.id}" type="text" name="event-destination" value="${destinationById ? he.encode(destinationById.name) : ''}" list="destination-list-${point.id}">
+                  <input class="event__input  event__input--destination" id="event-destination-${point.id}" type="text" name="event-destination" value="${destinationById ? he.encode(destinationById.name) : ''}" list="destination-list-${point.id}" required>
                   <datalist id="destination-list-${point.id}">
-                  ${CITIES.map((item) => `<option value="${item}"></option>`).join('')}
+                  ${cities.map((item) => `<option value="${item}"></option>`).join('')}
                   </datalist>
                 </div>
 
                 <div class="event__field-group  event__field-group--time">
                   <label class="visually-hidden" for="event-start-time-${point.id}">From</label>
-                  <input class="event__input  event__input--time" id="event-start-time-${point.id}" type="text" name="event-start-time" value="${!isAddPoint ? dateBegin : ''}">
+                  <input class="event__input  event__input--time" id="event-start-time-${point.id}" type="text" name="event-start-time" value="" required>
                   &mdash;
                   <label class="visually-hidden" for="event-end-time-${point.id}">To</label>
-                  <input class="event__input  event__input--time" id="event-end-time-${point.id}" type="text" name="event-end-time" value="${!isAddPoint ? dateEnd : ''}">
+                  <input class="event__input  event__input--time" id="event-end-time-${point.id}" type="text" name="event-end-time" value="" required>
                 </div>
 
                 <div class="event__field-group  event__field-group--price">
@@ -125,7 +124,7 @@ function createEditPointFormTemplate(point, dataOffers, dataDestinations, isAddP
                     <span class="visually-hidden">Price</span>
                     &euro;
                   </label>
-                  <input class="event__input  event__input--price" id="event-price-${point.id}" type="number" name="event-price" value="${isAddPoint ? 0 : basePrice}">
+                  <input class="event__input  event__input--price" id="event-price-${point.id}" type="number" placeholder="0" name="event-price" value="${isAddPoint ? 0 : basePrice}" required>
                 </div>
 
                 <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
