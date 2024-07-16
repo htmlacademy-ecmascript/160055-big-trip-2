@@ -2,9 +2,7 @@ import TripPresenter from './presenter/trip-presenter.js';
 import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
 import PointsApiService from './points-api-service.js';
-
-const AUTHORIZATION = 'Basic h5vpbygzbriwj5w';
-const END_POINT = 'https://22.objects.htmlacademy.pro';
+import {AUTHORIZATION, END_POINT} from './const.js';
 
 const siteMainElement = document.querySelector('.page-main');
 const tripMainElement = document.querySelector('.trip-main');

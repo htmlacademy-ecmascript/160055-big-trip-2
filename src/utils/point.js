@@ -1,18 +1,16 @@
 import dayjs from 'dayjs';
-// eslint-disable-next-line no-undef
-const isSameOrBefore = require('dayjs/plugin/isSameOrBefore');
-dayjs.extend(isSameOrBefore);
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import duration from 'dayjs/plugin/duration';
+import utc from 'dayjs/plugin/utc';
 
-// eslint-disable-next-line no-undef
-const isSameOrAfter = require('dayjs/plugin/isSameOrAfter');
-dayjs.extend(isSameOrAfter);
-
-// eslint-disable-next-line no-undef
-const duration = require('dayjs/plugin/duration');
 dayjs.extend(duration);
-// eslint-disable-next-line no-undef
-const utc = require('dayjs/plugin/utc');
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
 dayjs.extend(utc);
+
+const ONE_HOUR = 1;
+const HOURS_IN_DAY = 24;
 
 function isPointInPast(endDate) {
   return endDate && dayjs().isAfter(endDate, 'D');
@@ -53,11 +51,11 @@ const changeDateFormat = (date, dateFormat)=> dayjs(date).format(dateFormat);
 
 function getDifferenceDate(dateFrom, dateTo) {
   const difference = dayjs(dateTo).diff(dayjs(dateFrom), 'hour');
-  if (difference <= 1) {
+  if (difference <= ONE_HOUR) {
     return dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom))).format(MINUTES_FORMAT);
-  } else if (difference < 24) {
+  } else if (difference < HOURS_IN_DAY) {
     return dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom))).format(HOURS_FORMAT);
-  } else if (difference >= 24) {
+  } else if (difference >= HOURS_IN_DAY) {
     return dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom))).format(DAYS_FORMAT);
   }
 }

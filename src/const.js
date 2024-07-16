@@ -41,6 +41,12 @@ const BLANK_POINT = {
 
 const TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 const SORTS = Object.values(SortType);
-const CITIES = ['Amsterdam', 'Geneva', 'Chamonix'];
 
-export {POINTS_COUNT, DEFAULT_SORT_NAME, FilterType, SortType, BLANK_POINT, TYPES, SORTS, CITIES, UserAction, UpdateType};
+const AUTHORIZATION = 'Basic h5vpbygzbriwj5w';
+const END_POINT = 'https://22.objects.htmlacademy.pro';
+
+const POINTS_URL = 'big-trip/points';
+const OFFERS_URL = 'big-trip/offers';
+const DESTINATIONS_URL = 'big-trip/destinations';
+
+export {POINTS_COUNT, DEFAULT_SORT_NAME, FilterType, SortType, BLANK_POINT, TYPES, SORTS, UserAction, UpdateType, AUTHORIZATION, END_POINT, POINTS_URL, OFFERS_URL, DESTINATIONS_URL};
