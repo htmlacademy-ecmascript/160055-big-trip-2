@@ -11,6 +11,12 @@ dayjs.extend(utc);
 
 const ONE_HOUR = 1;
 const HOURS_IN_DAY = 24;
+const DATE_FORMAT = 'MMM DD';
+const HOUR_FORMAT = 'HH:mm';
+const MINUTES_FORMAT = 'mm[M]';
+const HOURS_FORMAT = 'HH[H] mm[M]';
+const DAYS_FORMAT = 'DD[D] HH[H] mm[M]';
+const FIELD_DATE_FORMAT = 'DD/MM/YY HH:mm';
 
 function isPointInPast(endDate) {
   return endDate && dayjs().isAfter(endDate, 'D');
@@ -24,27 +30,15 @@ function isPointInFuture(startDate) {
   return startDate && dayjs().isBefore(startDate, 'D');
 }
 
-const DATE_FORMAT = 'MMM DD';
-const HOUR_FORMAT = 'HH:mm';
-const MINUTES_FORMAT = 'mm[M]';
-const HOURS_FORMAT = 'HH[H] mm[M]';
-const DAYS_FORMAT = 'DD[D] HH[H] mm[M]';
-
-const FIELD_DATE_FORMAT = 'DD/MM/YY HH:mm';
-
-function lower(type) {
-  return type.toLowerCase();
-}
-
 function humanizePointDate(dateFrom) {
-  return dateFrom ? dayjs.utc(dateFrom).format(DATE_FORMAT) : '';
+  return dateFrom ? dayjs(dateFrom).format(DATE_FORMAT) : '';
 }
 function humanizeFormPointDate(dateFrom) {
-  return dateFrom ? dayjs.utc(dateFrom).format(FIELD_DATE_FORMAT) : '';
+  return dateFrom ? dayjs(dateFrom).format(FIELD_DATE_FORMAT) : '';
 }
 
 function humanizePointHour(hour) {
-  return hour ? dayjs.utc(hour).format(HOUR_FORMAT) : '';
+  return hour ? dayjs(hour).format(HOUR_FORMAT) : '';
 }
 
 const changeDateFormat = (date, dateFormat)=> dayjs(date).format(dateFormat);
@@ -81,4 +75,4 @@ const getDestinationById = (destMocks, pointMocks) => destMocks.find((item)=> it
 
 const getDestinationByTargetName = (destMocks, targetName) => destMocks.find((item)=> item.name === targetName);
 
-export {changeDateFormat, isPointInPast, isPointInPresent, isPointInFuture, lower, humanizePointDate, humanizeFormPointDate, humanizePointHour, getDifferenceDate, sortByDay, sortByTime, sortByPrice, getPointTypeOffer, getDestinationById, getDestinationByTargetName};
+export {changeDateFormat, isPointInPast, isPointInPresent, isPointInFuture, humanizePointDate, humanizeFormPointDate, humanizePointHour, getDifferenceDate, sortByDay, sortByTime, sortByPrice, getPointTypeOffer, getDestinationById, getDestinationByTargetName};

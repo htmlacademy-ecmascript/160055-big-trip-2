@@ -2,8 +2,6 @@ import AbstractView from '../framework/view/abstract-view.js';
 import {changeDateFormat, getDestinationById, sortByDay} from '../utils/point.js';
 
 const DATE_FORMAT = 'DD MMM';
-const CITIES_COUNT = 3;
-
 function createTripInfoTemplate(points, dataOffers, dataDestinations) {
 
   const sortedPoints = points.sort(sortByDay);
@@ -44,7 +42,7 @@ function createTripInfoTemplate(points, dataOffers, dataDestinations) {
     `<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
       <h1 class="trip-info__title">${startCity.name} &mdash;
-      ${sortedPoints.length === CITIES_COUNT ? secondCity.name : '...'}
+      ${sortedPoints.length === 3 ? secondCity.name : '...'}
       &mdash; ${endCity.name}</h1>
 
       <p class="trip-info__dates">${changeDateFormat(firstPoint.dateFrom, DATE_FORMAT)}&nbsp;&mdash;&nbsp;${changeDateFormat(lastPoint.dateTo, DATE_FORMAT)}</p>
