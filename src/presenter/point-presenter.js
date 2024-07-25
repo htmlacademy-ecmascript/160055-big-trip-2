@@ -51,6 +51,7 @@ export default class PointPresenter {
       dataOffers: this.#dataOffers,
       dataDestinations: this.#dataDestinations,
       isAddPoint: false,
+      buttonText: 'Delete',
       onFormSubmit: this.#handleFormSubmit,
       onEditFormButtonClick: this.#handleEditClick,
       onDeleteClick: this.#handleDeleteClick

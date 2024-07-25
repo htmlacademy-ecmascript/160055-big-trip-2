@@ -176,6 +176,9 @@ export default class TripPresenter {
   }
 
   #renderInfoTrip() {
+    if(this.points.length === 0) {
+      return;
+    }
     this.#infoTripPresenter = new InfoTripPresenter({
       tripMainElement: this.#tripMain,
     });
