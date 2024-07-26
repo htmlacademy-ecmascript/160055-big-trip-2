@@ -260,7 +260,9 @@ export default class TripPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
     this.#addPointPresenter.destroy();
-    this.#infoTripPresenter.destroy();
+    if(this.#infoTripPresenter) {
+      this.#infoTripPresenter.destroy();
+    }
 
     remove(this.#sortComponent);
     remove(this.#emptyListComponent);
