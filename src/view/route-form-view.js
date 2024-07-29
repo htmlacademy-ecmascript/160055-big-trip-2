@@ -64,22 +64,35 @@ function createOffersSelectorTemplate(dataOffers, point, isAddPoint) {
 function createDestinationSelectorTemplate(dataDestinations, point) {
   const destinationById = getDestinationById(dataDestinations, point);
 
-  return (
-    destinationById ?
+  if(!destinationById ||
+    (destinationById.description === ''
+      && destinationById.pictures.length === 0)) {
+    return (
+      ''
+    );
+  }else {
+    return (
       `<section class="event__section  event__section--destination">
-    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${destinationById.description}</p>
-    <div class="event__photos-container">
-      <div class="event__photos-tape">
-      ${destinationById.pictures.map((item)=>
-      `<img class="event__photo" src=${item.src} alt="Event photo">`).join('')}
-      </div>
-    </div>
-  </section>` : ''
-  );
+      ${destinationById.description ?
+        `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      <p class="event__destination-description">${destinationById.description}</p>` : ''
+      }
+
+      ${destinationById.pictures.length !== 0 ?
+        `<div class="event__photos-container">
+        <div class="event__photos-tape">
+        ${destinationById.pictures.map((item)=>
+        `<img class="event__photo" src=${item.src} alt="Event photo">`).join('')}
+        </div>
+      </div>` : ''
+      }
+
+    </section>`
+    );
+  }
 }
 
-function createEditPointFormTemplate(point, dataOffers, dataDestinations, isAddPoint) {
+function createEditPointFormTemplate(point, dataOffers, dataDestinations, isAddPoint, buttonText) {
   const {type, basePrice, isDisabled, isSaving, isDeleting} = point;
   const destinationById = getDestinationById(dataDestinations, point);
   const cities = dataDestinations.map((item)=>item.name);
@@ -120,18 +133,21 @@ function createEditPointFormTemplate(point, dataOffers, dataDestinations, isAddP
                 </div>
 
                 <div class="event__field-group  event__field-group--price">
-                  <label class="event__label" for="event-price-${point.id}">
-                    <span class="visually-hidden">Price</span>
-                    &euro;
-                  </label>
-                  <input class="event__input  event__input--price" id="event-price-${point.id}" type="number" placeholder="0" name="event-price" value="${isAddPoint ? 0 : basePrice}" required>
+                    <label class="event__label" for="event-price-${point.id}">
+                      <span class="visually-hidden">Price</span>
+                      &euro;
+                    </label>
+      ${isAddPoint ? `<input class="event__input  event__input--price" id="event-price-${point.id}" type="number" min="1" name="event-price" value="${basePrice ? basePrice : 0}" required ${isDisabled ? 'disabled' : ''}>`
+      :
+      `<input class="event__input  event__input--price" id="event-price-${point.id}" type="number" min="1" name="event-price" value="${basePrice}" required ${isDisabled ? 'disabled' : ''}>`
+    }
                 </div>
 
                 <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
-                <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting' : 'Delete' }</button>
-                <button class="event__rollup-btn" type="button">
+                <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : buttonText }</button>
+                ${isAddPoint ? '' : `<button class="event__rollup-btn" type="button">
                   <span class="visually-hidden">Open event</span>
-                </button>
+                </button>`}
               </header>
               <section class="event__details">
                 ${createOffersSelectorTemplate(dataOffers, point, isAddPoint)}
@@ -145,12 +161,14 @@ export default class RouteFormView extends AbstractStatefulView {
   _dataOffers = null;
   _dataDestinations = null;
   _handleFormSubmit = null;
+  _buttonText = null;
 
-  constructor({point, dataOffers, dataDestinations, isAddPoint, onFormSubmit}) {
+  constructor({point, dataOffers, dataDestinations, isAddPoint, buttonText, onFormSubmit}) {
     super();
     this._dataOffers = dataOffers;
     this._dataDestinations = dataDestinations;
     this._isAddPoint = isAddPoint;
+    this._buttonText = buttonText;
 
     this._setState(RouteFormView.parsePointToState(point));
     this._handleFormSubmit = onFormSubmit;
@@ -163,7 +181,7 @@ export default class RouteFormView extends AbstractStatefulView {
   };
 
   get template() {
-    return createEditPointFormTemplate(this._state, this._dataOffers, this._dataDestinations, this._isAddPoint);
+    return createEditPointFormTemplate(this._state, this._dataOffers, this._dataDestinations, this._isAddPoint, this._buttonText);
   }
 
   reset(point) {

@@ -43,10 +43,10 @@ const TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 's
 const SORTS = Object.values(SortType);
 
 const AUTHORIZATION = 'Basic h5vpbygzbriwj5w';
-const END_POINT = 'https://22.objects.htmlacademy.pro';
+const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 
-const POINTS_URL = 'big-trip/points';
-const OFFERS_URL = 'big-trip/offers';
-const DESTINATIONS_URL = 'big-trip/destinations';
+const POINTS_URL = 'points';
+const OFFERS_URL = 'offers';
+const DESTINATIONS_URL = 'destinations';
 
 export {POINTS_COUNT, DEFAULT_SORT_NAME, FilterType, SortType, BLANK_POINT, TYPES, SORTS, UserAction, UpdateType, AUTHORIZATION, END_POINT, POINTS_URL, OFFERS_URL, DESTINATIONS_URL};

@@ -176,6 +176,9 @@ export default class TripPresenter {
   }
 
   #renderInfoTrip() {
+    if(this.points.length === 0) {
+      return;
+    }
     this.#infoTripPresenter = new InfoTripPresenter({
       tripMainElement: this.#tripMain,
     });
@@ -257,7 +260,9 @@ export default class TripPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
     this.#addPointPresenter.destroy();
-    this.#infoTripPresenter.destroy();
+    if(this.#infoTripPresenter) {
+      this.#infoTripPresenter.destroy();
+    }
 
     remove(this.#sortComponent);
     remove(this.#emptyListComponent);

@@ -30,8 +30,9 @@ export default class AddPointPresenter {
       dataOffers: this.#dataOffers,
       dataDestinations: this.#dataDestinations,
       isAddPoint: true,
+      buttonText: 'Cancel',
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick,
+      onDeleteClick: this.#handleCancelClick,
     });
 
     render(this.#editPointFormComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
@@ -79,7 +80,7 @@ export default class AddPointPresenter {
     );
   };
 
-  #handleDeleteClick = () => {
+  #handleCancelClick = () => {
     this.destroy();
   };
 
