@@ -49,4 +49,6 @@ const POINTS_URL = 'points';
 const OFFERS_URL = 'offers';
 const DESTINATIONS_URL = 'destinations';
 
-export {POINTS_COUNT, DEFAULT_SORT_NAME, FilterType, SortType, BLANK_POINT, TYPES, SORTS, UserAction, UpdateType, AUTHORIZATION, END_POINT, POINTS_URL, OFFERS_URL, DESTINATIONS_URL};
+const addEventButton = document.querySelector('.trip-main__event-add-btn');
+
+export {POINTS_COUNT, DEFAULT_SORT_NAME, FilterType, SortType, BLANK_POINT, TYPES, SORTS, UserAction, UpdateType, AUTHORIZATION, END_POINT, POINTS_URL, OFFERS_URL, DESTINATIONS_URL, addEventButton};
