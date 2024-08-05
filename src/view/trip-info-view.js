@@ -35,25 +35,40 @@ function createTripInfoTemplate(points, dataOffers, dataDestinations) {
   });
 
   const totalPrice = offersPrices.reduce((accumulator, currentValue) => accumulator + currentValue, basePricesSum);
-
+  let secondCity = '';
+  if(points.length >= CITIES_COUNT) {
+    secondCity = getDestinationById(dataDestinations, secondPoint);
+  }
   const startCity = getDestinationById(dataDestinations, firstPoint);
-  const secondCity = getDestinationById(dataDestinations, secondPoint);
   const endCity = getDestinationById(dataDestinations, lastPoint);
 
   return (
-    `<section class="trip-main__trip-info  trip-info">
-    <div class="trip-info__main">
-      <h1 class="trip-info__title">${startCity.name} &mdash;
-      ${sortedPoints.length === CITIES_COUNT ? secondCity.name : '...'}
-      &mdash; ${endCity.name}</h1>
+    sortedPoints.length < CITIES_COUNT ?
+      `<section class="trip-main__trip-info  trip-info">
+  <div class="trip-info__main">
+    <h1 class="trip-info__title">${startCity ? startCity.name : ''} &mdash;
+    &mdash; ${endCity ? endCity.name : ''}</h1>
 
-      <p class="trip-info__dates">${changeDateFormat(firstPoint.dateFrom, DATE_FORMAT)}&nbsp;&mdash;&nbsp;${changeDateFormat(lastPoint.dateTo, DATE_FORMAT)}</p>
-    </div>
+    <p class="trip-info__dates">${changeDateFormat(firstPoint.dateFrom, DATE_FORMAT)}&nbsp;&mdash;&nbsp;${changeDateFormat(lastPoint.dateTo, DATE_FORMAT)}</p>
+  </div>
 
-    <p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>
-    </p>
-  </section>`
+  <p class="trip-info__cost">
+    Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>
+  </p>
+</section>` :
+      `<section class="trip-main__trip-info  trip-info">
+  <div class="trip-info__main">
+    <h1 class="trip-info__title">${startCity ? startCity.name : ''} &mdash;
+    ${sortedPoints.length === CITIES_COUNT ? secondCity.name : '...'}
+    &mdash; ${endCity ? endCity.name : ''}</h1>
+
+    <p class="trip-info__dates">${changeDateFormat(firstPoint.dateFrom, DATE_FORMAT)}&nbsp;&mdash;&nbsp;${changeDateFormat(lastPoint.dateTo, DATE_FORMAT)}</p>
+  </div>
+
+  <p class="trip-info__cost">
+    Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>
+  </p>
+</section>`
   );
 }
 

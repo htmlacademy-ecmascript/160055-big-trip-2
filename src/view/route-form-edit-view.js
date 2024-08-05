@@ -10,8 +10,8 @@ export default class RouteFormEditView extends RouteFormView {
   #datepickerTo = null;
   #handleDeleteClick = null;
 
-  constructor({point = BLANK_POINT, dataOffers, dataDestinations, isAddPoint, onFormSubmit, onEditFormButtonClick, onDeleteClick}) {
-    super({point, dataOffers, dataDestinations, isAddPoint, onFormSubmit});
+  constructor({point = BLANK_POINT, dataOffers, dataDestinations, isAddPoint, buttonText, onFormSubmit, onEditFormButtonClick, onDeleteClick}) {
+    super({point, dataOffers, dataDestinations, isAddPoint, buttonText, onFormSubmit});
 
     this._setState(RouteFormEditView.parsePointToState(point));
     this._handleEditFormButtonClick = onEditFormButtonClick;

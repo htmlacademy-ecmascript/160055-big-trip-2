@@ -12,6 +12,7 @@ addEventButton.addEventListener('click', handleNewPointButtonClick);
 const pointsModel = new PointsModel({
   pointApiService: new PointsApiService(END_POINT, AUTHORIZATION)
 });
+
 const filterModel = new FilterModel();
 
 const tripPresenter = new TripPresenter({

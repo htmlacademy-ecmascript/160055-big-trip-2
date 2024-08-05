@@ -10,7 +10,6 @@ function createRoutePointTemplate(point, dataOffers, dataDestinations) {
   const dateEvent = humanizePointDate(dateFrom);
   const hourBeginEvent = humanizePointHour(dateFrom);
   const hourEndEvent = humanizePointHour(dateTo);
-  const eventTypeSrc = type.toLowerCase();
   const difHours = getDifferenceDate(dateFrom, dateTo);
 
   const favoriteClassName = isFavorite ? 'event__favorite-btn--active' : '';
@@ -19,7 +18,7 @@ function createRoutePointTemplate(point, dataOffers, dataDestinations) {
     <div class="event">
       <time class="event__date" datetime="${dateEvent}">${dateEvent}</time>
       <div class="event__type">
-        <img class="event__type-icon" width="42" height="42" src="img/icons/${eventTypeSrc}.png" alt="Event type icon">
+        <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event ${type} icon">
       </div>
       <h3 class="event__title">${type} ${destinationById ? destinationById.name : ''}</h3>
       <div class="event__schedule">
