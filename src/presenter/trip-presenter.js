@@ -16,7 +16,7 @@ import {SortType, UpdateType, UserAction, FilterType} from '../const.js';
 import {sortByDay, sortByTime, sortByPrice} from '../utils/point.js';
 import {filterObject} from '../utils/filter.js';
 
-import { addEventButton } from '../main.js';
+import { addEventButton } from '../const.js';
 
 const TimeLimit = {
   LOWER_LIMIT: 350,
