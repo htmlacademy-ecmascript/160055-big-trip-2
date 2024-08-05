@@ -33,3 +33,5 @@ function handleNewPointButtonClick() {
 }
 pointsModel.init();
 tripPresenter.init();
+
+export { addEventButton };

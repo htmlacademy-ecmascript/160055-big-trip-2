@@ -16,6 +16,8 @@ import {SortType, UpdateType, UserAction, FilterType} from '../const.js';
 import {sortByDay, sortByTime, sortByPrice} from '../utils/point.js';
 import {filterObject} from '../utils/filter.js';
 
+import { addEventButton } from '../main.js';
+
 const TimeLimit = {
   LOWER_LIMIT: 350,
   UPPER_LIMIT: 1000,
@@ -191,6 +193,9 @@ export default class TripPresenter {
   };
 
   #renderSort() {
+    if(this.points.length === 0) {
+      return;
+    }
     this.#sortComponent = new SortView({
       currentSortType: this.#currentSortType,
       onSortTypeChange: this.#handleSortTypeChange});
@@ -232,6 +237,7 @@ export default class TripPresenter {
 
   #renderFailedLoad() {
     render(this.#failedComponent, this.#tripEventsContainer);
+    addEventButton.disabled = true;
   }
 
   #renderPointList() {
@@ -265,7 +271,9 @@ export default class TripPresenter {
     }
 
     remove(this.#sortComponent);
-    remove(this.#emptyListComponent);
+    if(this.#emptyListComponent){
+      remove(this.#emptyListComponent);
+    }
 
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
